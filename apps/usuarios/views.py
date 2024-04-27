@@ -94,7 +94,6 @@ def logar(request):
 
         if user:
             login(request, user)
-            return HttpResponse('logado')
             return redirect(reverse('home'))
         else:
             messages.add_message(

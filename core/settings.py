@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'usuarios',
+    'plataforma',
 ]
 
 MIDDLEWARE = [
@@ -144,3 +145,5 @@ MESSAGE_TAGS = {
     constants.SUCCESS: 'alert-success',
     constants.WARNING: 'alert-warning'
 }
+
+LOGIN_URL = 'login'
