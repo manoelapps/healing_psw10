@@ -22,7 +22,7 @@
             <div class="box-senhas">
                 <div class="mb-3">
                     <label>Senha</label>
-                    <input type="password" class="form-control" name="senha" placeholder="Senha ..."  value="{{senha}}" hx-get="{% url 'check_senha' %}" hx-trigger="keyup" hx-target="#check-senha-out" required>
+                    <input type="password" class="form-control" name="senha" placeholder="Senha ..."  value="{{senha}}" hx-get="{% url 'check_senha' %}" hx-trigger="focusout" hx-target="#check-senha-out" required>
                 </div>
                 <div class="mb-3">
                     <label>Confirmar senha</label>

@@ -1,0 +1,39 @@
+{% load static %}
+{% if request.user.is_authenticated %}
+    <nav class="navbar navbar-expand-lg navbar-dark nav-menu jura-400">
+        <div class="container">
+            <img src="{% static 'geral/img/logo.png' %}" alt="logo">
+            <a class="navbar-brand" href="{% url 'home' %}">healing</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse fs-25" id="navbarNav">
+                <ul class="navbar-nav align-items-center gap-3">
+
+                    {% if is_medico %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarMedicos" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Médico
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarMedicos">
+
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'cadastro_medico' %}">Sou médico</a>
+                        </li>
+                    {% endif %}
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'sair' %}" data-bs-tt="tooltip" title="Sair">
+                            {{request.user.username}}
+                            <i class="bi bi-door-open-fill me-1 fs-5"></i>
+                        </a>             
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+{% endif %}
