@@ -11,3 +11,12 @@ def check_username(request):
         return HttpResponse('Este username já existe !')
     except User.DoesNotExist:
         return HttpResponse('')
+
+
+def check_senha(request):
+    senha = request.GET.get('senha')
+
+    if len(senha.strip()) > 0 and len(senha.strip()) < 6:
+        return HttpResponse('A senha deve conter 6 ou mais caracteres !')
+    else:
+        return HttpResponse('')

@@ -1,0 +1,25 @@
+{% extends './base_usuarios.html' %}
+
+{% block 'title' %}Login{% endblock 'title' %}
+
+{% block 'content-form' %}
+    <div class="box-form">
+        <h3>Logar</h3>
+        {% include "partials/messages.html" %}
+        <form action="{% url 'login' %}" method="POST">
+            {% csrf_token %}
+            <div class="my-3">
+                <label>Nome do usuário</label>
+                <input type="text" class="form-control" name="usuario" placeholder="Informe seu nome" value="{{username}}" required autofocus>
+            </div>
+            <div class="mb-4">
+                <label>Senha</label>
+                <input type="password" class="form-control" name="senha" placeholder="Informe sua senha" value="{{senha}}" required>
+            </div>
+            <div class="box-botoes">
+                <input type="submit" value="Logar" class="btn-cadastro">
+                <a href="{% url 'cadastro' %}" class="btn-secundario">Não possuo uma conta</a>
+            </div>
+        </form>
+    </div>
+{% endblock 'content-form' %}

@@ -1,6 +1,9 @@
-from django.shortcuts import render
+from django.http import HttpResponse
+from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
+from django.urls import reverse
 
 
 def cadastro(request):
@@ -21,6 +24,10 @@ def cadastro(request):
         if len(username.strip()) == 0 or len(email.strip()) == 0 \
                 or len(senha.strip()) == 0 or len(confirmar_senha.strip()) == 0:
             messages.add_message(request, messages.WARNING, 'Preencha todos os campos !')
+            return render(request, template_name, context)
+        
+        if len(senha.strip()) < 6:
+            messages.add_message(request, messages.WARNING, 'A senha deve conter 6 ou mais caracteres !')
             return render(request, template_name, context)
 
         users = User.objects.filter(username=username)
@@ -57,4 +64,42 @@ def cadastro(request):
 
         return render(request, template_name, context)
     
+    return render(request, template_name)
+
+
+def logar(request):
+    template_name = 'login.html'
+    if request.method == 'POST':
+        username = request.POST.get('usuario')
+        senha = request.POST.get('senha')
+
+        context = {
+            'username': username,
+            'senha': senha,
+        }
+
+        if len(username.strip()) == 0 or len(senha.strip()) == 0:
+            messages.add_message(
+                request, messages.ERROR, 'Preencha todos os campos!'
+            )
+            return render(request, template_name, context)
+        
+        if not User.objects.filter(username=username):
+            messages.add_message(
+                request, messages.ERROR, 'Usuário não cadastrado !'
+            )
+            return render(request, template_name, context)
+        
+        user = authenticate(request, username=username, password=senha)
+
+        if user:
+            login(request, user)
+            return HttpResponse('logado')
+            return redirect(reverse('home'))
+        else:
+            messages.add_message(
+                request, messages.ERROR, 'Usuário ou senha inválidos'
+            )
+            return render(request, template_name, context)
+
     return render(request, template_name)

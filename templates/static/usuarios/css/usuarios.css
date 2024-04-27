@@ -1,5 +1,4 @@
 .container-fluid {
-    /* height: 100vh; */
     min-height: 100vh;
     display: flex;
     justify-content: space-around;
@@ -38,9 +37,10 @@ section {
     opacity: .7;
 }
 
-.content h3 {
+.box-form > h3 {
     color: var(--main-color);
-    font-weight: bold;
+    font-size: 30px;
+    font-weight: 600;
 }
 
 .btn-cadastro,

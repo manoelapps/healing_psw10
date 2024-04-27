@@ -5,8 +5,8 @@
 {% block 'title' %}Cadastro de usuário{% endblock 'title' %}
 
 {% block 'content-form' %}
-    <div class="">
-        <h3 class="fw-600 fs-30">Cadastre-se</h3>
+    <div class="box-form">
+        <h3>Cadastre-se</h3>
         {% include "partials/messages.html" %}
         <form action="{% url 'cadastro' %}" method="POST">
             {% csrf_token %}
@@ -22,16 +22,17 @@
             <div class="box-senhas">
                 <div class="mb-3">
                     <label>Senha</label>
-                    <input type="password" class="form-control" name="senha" placeholder="Senha ..."  value="{{senha}}" required>
+                    <input type="password" class="form-control" name="senha" placeholder="Senha ..."  value="{{senha}}" hx-get="{% url 'check_senha' %}" hx-trigger="keyup" hx-target="#check-senha-out" required>
                 </div>
                 <div class="mb-3">
                     <label>Confirmar senha</label>
                     <input type="password" class="form-control" name="confirmar_senha" placeholder="Repita senha ..." value="{{confirmar_senha}}" required>
                 </div>
             </div>
+            <span class="fw-600 text-danger" id="check-senha-out"></span>
             <div class="box-botoes mt-3">
                 <input type="submit" value="Cadastrar" class="btn-cadastro">
-                <a href="{ url "login" %}" class="btn-secundario">Já possuo uma conta</a>
+                <a href="{% url 'login' %}" class="btn-secundario">Já possuo uma conta</a>
             </div>
         </form>
     </div>
