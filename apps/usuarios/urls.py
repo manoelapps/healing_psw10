@@ -4,6 +4,7 @@ from . import views, htmx_views
 urlpatterns = [
     path('cadastro/', views.cadastro, name='cadastro'),
     path('login/', views.logar, name='login'),
+    path('logout/', views.sair, name='sair'),
 ]
 
 htmx_urlpatterns = [
