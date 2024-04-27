@@ -1,0 +1,28 @@
+.shadow-main-color {
+    box-shadow: 1px 1px 5px 1px rgba(0, 204, 190,.4);
+}
+
+.foto-perfil {
+    width: 120px;
+    height: 120px;
+    border-radius: 75px;
+}
+
+.doc {
+    padding-left: 0;
+    list-style: none;
+}
+
+.doc li {
+    margin-bottom: 1rem;
+}
+
+.doc a {
+    background-color: #ebeaea;
+    border-radius: .5rem;
+    color: #000000B2;
+    display: inline-block;
+    text-decoration: none;
+    padding: 10px 20px;
+    width: 100%;
+}

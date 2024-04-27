@@ -1,0 +1,26 @@
+.nav-menu {
+    background-color: var(--main-color);
+    padding: 0;
+}
+
+.navbar > .container > img {
+    width: 58px;
+    margin-right: .5rem;
+}
+
+.navbar-brand {
+    font-size: 25px;
+    text-transform: uppercase;
+}
+
+.dropdown-menu {
+    background-color: var(--main-color);
+}
+
+.dropdown-menu .dropdown-item {
+    color: #fff;
+}
+
+.dropdown-menu .dropdown-item:hover {
+    color: #686565;
+}

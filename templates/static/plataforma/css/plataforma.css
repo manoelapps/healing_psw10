@@ -1,0 +1,123 @@
+.especialidades {
+    background-color: #f2f2f2;
+    border-radius: 8px;
+    padding: 4px 10px;
+}
+
+.card-medicos {
+    width: 60%;
+    min-width: 420px;
+    background-color: #EAEAEA;
+    border: 1px solid #78BBBB;
+    padding: 20px;
+    box-shadow: 0px 4px 4px 0px #00000040;
+}
+
+.foto-perfil-card {
+    width: 80px;
+    height: 80px;
+    border: 1px solid #9c9999;
+    border-radius: 40px;
+}
+
+.foto-perfil-card-lg {
+    width: 150px;
+    height: 150px;
+    border: 1px solid #9c9999;
+    border-radius: calc(100%/2);
+}
+
+.icon-main {
+    color: var(--main-color);
+}
+
+.bg-main-lembrete {
+    background-color: #09A6A3AA;
+    color: white;
+    height: 38px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    /* text-align: center; */
+}
+
+.icon-differential {
+    color: var(--contrast-color);
+}
+
+table {
+    border-collapse: collapse !important;
+    width: 100%;
+}
+
+th, td {
+    padding: 8px;
+    text-align: center;
+    background-color: #EAEAEA;
+}
+
+th {
+    background-color: #EAEAEA;
+}
+
+.link {
+    text-decoration: none;
+}
+
+.today {
+    background-color: var(--dark-color);
+}
+
+.selecionar-dia {
+    width: 100%;
+    background-color: #EAEAEA;
+    box-shadow: 1px 1px 10px gray;
+}
+
+.header-dias {
+    background-color: var(--main-color);
+    padding: 10px 15px;
+    color: white;
+    text-decoration: none;
+}
+
+.dia-semana {
+    float: right;
+}
+
+.conteudo-data {
+    padding: 20px 15px;
+    color: black;
+}
+
+
+.link:hover {
+    text-decoration: none;
+} 
+
+.list-minhas-consultas {
+    padding: 10px 0;
+}
+
+tbody tr:nth-child(2n + 1) th, 
+tbody tr:nth-child(2n + 1) td {
+    background-color: var(--main-color);
+}
+
+td a {
+    text-decoration: none;
+}
+
+.documentos {
+    background-color: #cfcfcf;
+    color: black;
+    padding: 20px;
+    border-radius: 10px;
+    font-size: 20px;
+}
+
+.not-active {
+    color: #646464;
+    cursor: not-allowed;
+    pointer-events: none;
+}
