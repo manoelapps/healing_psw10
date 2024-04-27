@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block 'head' %}
+    <link href="{% static 'gerais/css/geral.css' %}" rel="stylesheet">
+    <link href="{% static 'usuarios/css/usuarios.css' %}" rel="stylesheet">
+{% endblock 'head' %}
+
+
+{% block 'body' %}
+
+    <div class="container-fluid">
+        <section class="w-50">
+            <div class="box-titulo">
+                <div class="box-titulo-item">
+                    <img src="{% static 'gerais/img/logo.png' %}" alt="logo">
+                </div>
+                <div class="box-titulo-item">
+                    <h3 class="jura-400 fs-40">Consultas</h3>
+                    <h5 class="jura-400">Online</h5>
+                </div>
+            </div>
+            <hr class="divisor">
+            <div class="content">
+                {% block 'content-form' %}{% endblock 'content-form' %}
+            </div>
+        </section>                
+        <aside class="w-50 bg-main">
+            <div class="box-titulo-item">
+                <img src="{% static 'usuarios/img/ilustracao.png' %}" alt="Ilustração de uma equipe médica">
+            </div>
+        </aside>
+    </div>
+
+{% endblock 'body' %}

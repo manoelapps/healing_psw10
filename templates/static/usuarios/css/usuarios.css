@@ -1,0 +1,137 @@
+.container-fluid {
+    /* height: 100vh; */
+    min-height: 100vh;
+    display: flex;
+    justify-content: space-around;
+}
+
+section {
+    display: flex;
+    flex-direction: column;
+    padding: 0 4rem;
+    margin-top: 5rem;
+}
+
+.box-titulo {
+    display: flex;
+    align-items: center;
+    gap: 5;
+    text-align: center;
+    justify-content: center;
+    padding: 0 5rem;
+    margin-bottom: 2rem;
+}
+
+.box-titulo .box-titulo-item:first-child img {
+    width: 5rem;
+} 
+
+.box-titulo-item h3 {
+    text-transform: uppercase;
+    margin-left: 1rem;
+    margin-bottom: 0;
+}
+
+.divisor {
+    border: 1px solid black;
+    margin-bottom: 1.5rem;
+    opacity: .7;
+}
+
+.content h3 {
+    color: var(--main-color);
+    font-weight: bold;
+}
+
+.btn-cadastro,
+.btn-secundario {
+    padding: 1rem 1.5rem;
+    border: 1px solid var(--differential-color);
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    transition: .3s ease-in-out;
+}
+
+.btn-cadastro {
+    background-color: var(--dark-color);
+    color: #fff;
+    opacity: .8;
+}
+
+.btn-cadastro:hover{
+    opacity: 1;
+}
+
+.btn-secundario {
+    background-color: transparent;
+    color: var(--dark-color);
+    opacity: .5;
+}
+
+.btn-secundario:hover {
+    background-color: #329D98;
+    border: 2px solid var(--differential-color);
+    color: #fff;
+    opacity: 1;
+}
+
+.bsm {
+    padding: 4px 25px;
+    height: 38px;
+}
+
+.box-senhas,
+.box-botoes {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2;
+}
+
+.box-senhas > div {
+    width: 45%;
+}
+
+.bg-main {
+    background-color: var(--main-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bg-main .box-titulo-item {
+    width: 75%;
+    text-align: center;
+}
+
+.bg-main img {
+    background-color: var(--differential-color);
+    border-radius: 50%;
+    padding: 10%;
+    width: 100%;
+}
+
+@media screen and (max-width:980px) {
+    .box-botoes {
+        display: block;
+    }
+    .box-botoes input {
+        width: 100%;
+    }
+    .box-botoes a {
+        display: block;
+        margin: 1rem 0;
+    }
+}
+
+@media screen and (max-width:882px) {
+    .box-senhas {
+        display: block;
+    }
+    .box-senhas > div {
+        width: 100%;
+    }
+}

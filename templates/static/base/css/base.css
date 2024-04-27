@@ -1,0 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Jura:wght@300..700&display=swap');
+
+:root{
+    --main-color: #00CCBE;
+    /* --dark-color: #000716; */
+    --dark-color: #09A6A3;
+    --secondary-dark-color: rgb(15, 2, 26);
+    --light-color: #00c1f3;
+    /* --contrast-color: #E2E3E5; */
+    --contrast-color: #FFD686;
+    --differential-color: #67DCD1;
+    /* --bs-body-font-weight: 500; */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Inter", sans-serif;
+}

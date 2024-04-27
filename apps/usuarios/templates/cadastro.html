@@ -1,0 +1,35 @@
+{% extends './base_usuarios.html' %}
+
+{% block 'title' %}Cadastro de usuário{% endblock 'title' %}
+
+{% block 'content-form' %}
+    <div class="">
+        <h3 class="fw-600 fs-30">Cadastre-se</h3>
+        {% include "partials/messages.html" %}
+        <form action="{% url 'cadastro' %}" method="POST">
+            {% csrf_token %}
+            <div class="my-3">
+                <label>Username</label>
+                <input type="text" class="form-control" name="username" placeholder="Usuário ..." value="{{username}}"  required autofocus>
+            </div>
+            <div class="my-3">
+                <label>E-mail</label>
+                <input type="email" class="form-control" name="email" placeholder="email@email.com" value="{{email}}" required autofocus>
+            </div>
+            <div class="box-senhas">
+                <div class="mb-3">
+                    <label>Senha</label>
+                    <input type="password" class="form-control" name="senha" placeholder="Senha ..."  value="{{senha}}" required>
+                </div>
+                <div class="mb-3">
+                    <label>Confirmar senha</label>
+                    <input type="password" class="form-control" name="confirmar_senha" placeholder="Repita senha ..." value="{{confirmar_senha}}" required>
+                </div>
+            </div>
+            <div class="box-botoes mt-3">
+                <input type="submit" value="Cadastrar" class="btn-cadastro">
+                <a href="{ url "login" %}" class="btn-secundario">Já possuo uma conta</a>
+            </div>
+        </form>
+    </div>
+{% endblock 'content-form' %}
