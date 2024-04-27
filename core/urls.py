@@ -7,4 +7,5 @@ urlpatterns = [
     path('auth/', include('usuarios.urls')),
     path('plataforma/', include('plataforma.urls')),
     path('', lambda home: redirect(reverse('home'))),
+    path('medicos/', include('medicos.urls')),
 ]
