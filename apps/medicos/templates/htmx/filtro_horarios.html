@@ -1,0 +1,14 @@
+{% for data in datas_abertas %}
+<tr>
+    <th scope="row">{{forloop.counter}}</th>
+    <td>{{data.data_br}}</td>
+    <td>
+        {% if data.agendada %}
+            <i class="bi bi-hand-thumbs-up-fill text-success"></i>
+        {% else %}
+            <i class="bi bi-hand-thumbs-down-fill text-info"></i>
+        {% endif %}
+    </td>
+    <td><a href="{% url 'deletar_horario' data.id %}" class="btn btn-danger btn-sm" data-bs-tt="tooltip" title="cancelar"><i class="bi bi-trash2-fill"></i></a></td>
+</tr>
+{% endfor %}

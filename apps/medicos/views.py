@@ -1,6 +1,6 @@
 from datetime import datetime
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.urls import reverse
@@ -156,3 +156,23 @@ def abrir_horario(request):
         return redirect(reverse('abrir_horario'))
 
     return render(request, template_name, context)
+
+
+@login_required
+def deletar_horario(request, id_horario):
+    data_aberta = get_object_or_404(DatasAbertas, id=id_horario)
+    if data_aberta.user != request.user:
+        messages.add_message(request, messages.ERROR, 'Esta data/horário não lhe pertence !') 
+        return redirect(reverse('abrir_horario'))
+    
+    if data_aberta.agendada:
+        messages.add_message(request, messages.ERROR, 'Esta data/horário não pode ser excluído, pois está agendada !') 
+        return redirect(reverse('abrir_horario'))
+
+    try:
+        data_aberta.delete()
+        messages.add_message(request, messages.SUCCESS, 'Data/Hora removida com sucesso.')
+    except Exception as e:
+        messages.add_message(request, messages.ERROR, f'Erro: {e}') 
+
+    return redirect(reverse('abrir_horario'))
