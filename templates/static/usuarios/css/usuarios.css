@@ -84,6 +84,10 @@ section {
     height: 38px;
 }
 
+.bsm-6 {
+    padding: 6px 10px;
+}
+
 .box-senhas,
 .box-botoes {
     display: flex;

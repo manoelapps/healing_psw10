@@ -16,7 +16,12 @@
                                 Médico
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarMedicos">
-
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'cadastro_medico' %}">Cadastro</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{ url 'abrir_horario' %}">Abrir horários</a>
+                                </li>
                             </ul>
                         </li>
                     {% else %}

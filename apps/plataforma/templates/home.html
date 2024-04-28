@@ -23,47 +23,45 @@
                         {{request.user.username.capitalize}}</span>.
                 </p>
                 <form action="{% url 'home' %}" post="GET">
-                    <input type="text" class="form-control shadow-main-color mb-3" placeholder="Busque por profissionais ..." name="medico" autofocus>
-
                     <div class="d-flex flex-wrap gap-4 row-gap-3 mb-3">
                         {% for especialidade in especialidades %}
                             <div class="especialidades">
                                 <input type="checkbox" class="form-check-input" name="especialidades" id="especialidade_{{especialidade.id}}" value="{{especialidade.id}}">
-                                <label class="form-check-label" for="especialidade_{{especialidade.id}}">
+                                <label class="form-check-label lh-1" for="especialidade_{{especialidade.id}}">
                                     {{especialidade.nome}}
                                 </label>
                             </div>
                         {% endfor %}
                     </div>
-                    <div class="box-botoes mx-0">
-                        <input type="submit" value="filtrar" class="btn-cadastro w-25">
-                        <a href="{% url 'home' %}" class="btn-secundario">
+                    <div class="d-flex align-items-center gap-3">
+                        <input type="text" class="form-control" placeholder="Busque por profissionais e/ou especialidades ..." name="medico" autofocus>
+                        <button type="submit" value="filtrar" class="btn-cadastro bsm-6 data-bs-toggle="toggle" data-bs-tt="tooltip" title="Filtrar""><i class="bi bi-funnel-fill"></i></button>
+                        <a href="{% url 'home' %}" class="btn-secundario bsm-6" data-bs-tt="tooltip" title="Remove filtro">
                             <i class="bi bi-arrow-counterclockwise"></i>
-                            Limpar filtro
                         </a>
                     </div>
                 </form>
                 <hr class="my-4">
                 <div class="list-medicos">
                     {% for medico in medicos %}
-                        <div class="card-medicos shadow-main-color">
-                            <div class="row mb-3">
-                                <div class="col-md-3"><img src="{{medico.foto.url}}" class="foto-perfil-card" alt=""></div>
-                                <div class="col-md">
+                        <div class="card-medicos">
+                            <div class="mb-3">
+                                <div class=""><img src="{{medico.foto.url}}" class="foto-perfil-card" alt="Foto do médico"></div>
+                                <div class="">
                                     <h3 class="fw-600 fs-18 mb-1">Dr(a). {{medico.nome}} <i class="bi bi-patch-check-fill icon-main"></i></h3>
-                                    <p class="fs-12 mb-0">{{medico.descricao}}</p>
+                                    <p class="fs-12 lh-1 mb-0">{{medico.descricao}}</p>
                                 </div>
                             </div>  
                             <!-- TODO: Colocar as estrelas -->
-                            <p class="fs-10"><i class="bi bi-map icon-main me-2"></i>{{medico.logradouro}}, {{medico.numero}}</p>
-                            <p class="fs-10"><i class="bi bi-calendar2-week icon-main me-2"></i>Proxima data: 
+                            <p class="fs-10 lh-1"><i class="bi bi-map icon-main me-2"></i>{{medico.logradouro}}, {{medico.numero}}</p>
+                            <p class="fs-10 lh-1"><i class="bi bi-calendar2-week icon-main me-2"></i>Proxima data: 
                                 {% if medico.proxima_data %}
                                     {{medico.proxima_data.data}}
                                 {% else %}
                                     Aguarde uma data.
                                 {% endif %}
                             </p>
-                            <a href="{% url 'escolher_horario' medico.id %}" class="btn btn-success btn-dark-color">Agendar</a>
+                            <a href="{ url 'escolher_horario' medico.id %}" class="btn-cadastro py-1 d-inline-block">Agendar</a>
                         </div>
                         <br>
                     {% endfor %}
