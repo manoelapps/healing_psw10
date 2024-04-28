@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block 'title' %}Abrir horário{% endblock 'title' %}
+
+{% block 'head' %}
+    <link rel="stylesheet" href="{% static 'geral/css/geral.css' %}">
+    <link rel="stylesheet" href="{% static 'geral/css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'usuarios/css/usuarios.css' %}">
+    <link rel="stylesheet" href="{% static 'medicos/css/medicos.css' %}">
+{% endblock 'head' %}
+
+{% block 'body' %}
+
+    <div class="container inter">
+        <div class="row gap-4 mt-5">
+            <div class="col-md">
+                <div class="mb-3">
+                    <img src="{{medico.foto.url}}" class="foto-perfil" alt="Foto do médico">
+                    <label class="fw-700 fs-25 ms-4">Olá, <span class="color-dark">{{request.user.username.capitalize}}</span>.</label>
+                </div>
+                <p class="fw-700 fs-25">Abrir horários para consultas</p>
+                <hr class="mb-5">
+
+                {% include "partials/messages.html" %}
+
+                <form action="{% url 'abrir_horario' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="d-flex gap-4 align-items-end">
+                        <div class="mb-3">
+                            <label for="">Escolher data:</label>
+                            <input type="datetime-local" name="data" class="form-control" value="{{data_informada}}" required>
+                        </div>
+                        <div class="mb-3">
+                            <input type="submit" value="Salvar" class="btn-cadastro bsm">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-5">
+                {% if datas_abertas %}
+                    <div class="d-flex align-items-center justify-content-between">
+                        <p class="fw-700 fs-25 mb-0 col-md-5">Horários:</p>
+                        <input type="date" name="data-filter" class="form-control col-md" data-bs-tt="tooltip" title="Filtro" hx-get="{% url 'filtrar_horarios' %}" hx-trigger="change" hx-target="#tbody-horarios">
+                        <a href="{% url 'abrir_horario' %}" class="btn-secundario bsm-6 ms-3" data-bs-tt="tooltip" title="Remover filtro">
+                            <i class="bi bi-arrow-counterclockwise"></i>
+                        </a>
+                    </div>
+                    <hr class="my-4">
+                    <table class="table table-bordered table-sm align-middle text-center mt-3">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Data</th>
+                                <th scope="col">Agendada</th>
+                                <th scope="col">Ação</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-horarios">
+                            {% for data in datas_abertas %}
+                                <tr>
+                                    <th scope="row">{{forloop.counter}}</th>
+                                    <td>{{data.data_br}}</td>
+                                    <td>
+                                        {% if data.agendada %}
+                                            <i class="bi bi-hand-thumbs-up-fill text-success"></i>
+                                        {% else %}
+                                            <i class="bi bi-hand-thumbs-down-fill text-info"></i>
+                                        {% endif %}
+                                    </td>
+                                    <td><a href="{ url 'deletar_horario' data.id %}" class="btn btn-danger btn-sm" data-bs-tt="tooltip" title="Excluir"><i class="bi bi-trash2-fill"></i></a></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock 'body' %}
+
+{% block 'script' %}    
+    <script src="{% static 'base/js/htmx.min.js' %}"></script>
+{% endblock 'script' %}

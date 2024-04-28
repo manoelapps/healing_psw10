@@ -1,9 +1,10 @@
+from datetime import datetime
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.urls import reverse
-from .models import is_medico, Especialidade, Medico
+from .models import is_medico, Especialidade, Medico, DatasAbertas
 
 
 @login_required
@@ -76,7 +77,7 @@ def cadastro_medico(request):
 
                     return render(request, template_name, context)
 
-        dados_medico = Medico(
+        medico = Medico(
             crm=crm.strip(),
             nome=nome.strip(),
             cep=cep.strip(),
@@ -95,15 +96,63 @@ def cadastro_medico(request):
         )
 
         try:
-            dados_medico.save()
+            medico.save()
             messages.add_message(request, messages.SUCCESS, 'Cadastro médico realizado com sucesso.')
         except Exception as e:
             messages.add_message(request, messages.ERROR, f'Erro: {e}')
             return render(request, template_name, context)
 
-        return HttpResponse('Abrir horário')
         return redirect(reverse('abrir_horario'))
 
     return render(request, template_name, context)
 
 
+@login_required
+def abrir_horario(request):
+
+    if not is_medico(request.user):
+        messages.add_message(request, messages.WARNING, 'Somente médicos podem acessar essa página, você foi redirecionado !')
+        return redirect(reverse('home'))
+    
+    template_name = 'abrir_horario.html'
+    medico = Medico.objects.get(user=request.user)
+    datas_abertas = DatasAbertas.objects.filter(user=request.user)
+
+    context = {
+        'medico': medico,
+        'datas_abertas': datas_abertas,
+        'is_medico': is_medico(request.user)
+    }
+
+    if request.method == "POST":
+        data = request.POST.get('data')
+
+        if not data:
+            messages.add_message(request, messages.WARNING, 'Data não informada !')
+            return redirect(reverse('abrir_horario'))
+
+        data_formatada = datetime.strptime(data, "%Y-%m-%dT%H:%M")
+
+        if datas_abertas.filter(data=data):
+            context['data_informada'] = data
+            messages.add_message(request, messages.ERROR, f'A data/hora informada já foi cadastrada anteriormente !')
+            return render(request, template_name, context)
+        
+        if data_formatada <= datetime.now():
+            context['data_informada'] = data
+            messages.add_message(request, messages.WARNING, 'A data/hora deve ser maior ou igual a data/hora atual.')
+            return render(request, template_name, context)
+
+        data_aberta = DatasAbertas(
+            data=data,
+            user=request.user
+        )
+        try:
+            data_aberta.save()
+            messages.add_message(request, messages.SUCCESS, 'Data/Horário cadastrado com sucesso.')
+        except Exception as e:
+            messages.add_message(request, messages.ERROR, f'Erro: {e}')
+
+        return redirect(reverse('abrir_horario'))
+
+    return render(request, template_name, context)
