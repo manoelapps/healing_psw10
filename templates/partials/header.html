@@ -9,7 +9,20 @@
             </button>
             <div class="collapse navbar-collapse fs-25" id="navbarNav">
                 <ul class="navbar-nav align-items-center gap-3">
-
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarPacientes" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Paciente
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarPacientes">
+                            <li><a class="dropdown-item" href="{% url 'home' %}">Agendamento</a></li>
+                            <!--
+                            <li>
+                                <a class="dropdown-item" href="{ url 'cadastro_atualizar' %}">Atualizar</a>
+                            </li>
+                            -->
+                            <li><a class="dropdown-item" href="{% url 'minhas_consultas' %}">Minhas consultas</a></li>
+                        </ul>
+                    </li>
                     {% if is_medico %}
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarMedicos" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -17,16 +30,12 @@
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarMedicos">
                                 <li>
-                                    <a class="dropdown-item" href="{% url 'cadastro_medico' %}">Cadastro</a>
+                                    <a class="dropdown-item" href="{% url 'cadastro_pessoa' %}">Cadastro</a>
                                 </li>
                                 <li>
                                     <a class="dropdown-item" href="{% url 'abrir_horario' %}">Abrir horários</a>
                                 </li>
                             </ul>
-                        </li>
-                    {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'cadastro_medico' %}">Sou médico</a>
                         </li>
                     {% endif %}
                 </ul>

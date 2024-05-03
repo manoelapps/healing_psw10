@@ -46,7 +46,8 @@ section {
 
 .btn-cadastro,
 .btn-secundario {
-    padding: 1rem 1.5rem;
+    /* padding: 1rem 1.5rem; */
+    padding: 13px 24px;
     border: 1px solid var(--differential-color);
     border-radius: 6px;
     font-size: 1rem;
@@ -77,6 +78,11 @@ section {
     border: 1px solid var(--differential-color);
     color: #fff;
     opacity: 1;
+}
+
+.btn-filtro {
+    line-height: 100%;
+    padding: 10px 10px;
 }
 
 .bsm {

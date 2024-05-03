@@ -10,6 +10,7 @@ urlpatterns = [
     path('plataforma/', include('plataforma.urls')),
     path('', lambda home: redirect(reverse('home'))),
     path('medicos/', include('medicos.urls')),
+    path('pacientes/', include('pacientes.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block 'title' %}Minhas consultas{% endblock 'title' %}
+
+{% block 'head' %}
+    <link rel="stylesheet" href="{% static 'geral/css/geral.css' %}">
+    <link rel="stylesheet" href="{% static 'geral/css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'usuarios/css/usuarios.css' %}">
+    <link rel="stylesheet" href="{% static 'plataforma/css/plataforma.css' %}">
+    <link rel="stylesheet" href="{% static 'medicos/css/medicos.css' %}">
+{% endblock 'head' %}
+
+{% block 'body' %}
+
+    <div class="container inter pt-5">
+        {% include 'partials/paciente_topo.html' %}
+        <!-- <h2><span class="color-dark">Suas consultas</span></h2> -->
+        <form action="{% url 'minhas_consultas' %}" method="GET">
+            <div class="d-flex gap-4 mt-4">
+                <div class="mb-3">
+                    <input type="text" name="medico" value="{{medico_filter}}" class="form-control form-control-sm" placeholder="Médico ...">
+                </div>
+                <div class="mb-3">
+                    <select name="status" class="form-select form-select-sm">
+                        <option value="">- - -</option>
+                        {% for status in status_consulta %}
+                            <option value="{{status.0}}"
+                            {% if status.0 == status_filter %}selected{% endif %}>{{status.1}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <input type="month" name="data" value="{{data_filter}}" class="form-control" placeholder="Data da consulta">
+                </div>
+                <div class="mb-3">
+                    <input type="submit" value="Filtrar" class="btn-cadastro bsm">
+                </div>
+                <div class="mb-3 d-flex align-items-end">
+                    <a href="{% url 'minhas_consultas' %}" class="btn-secundario btn-filtro" data-bs-tt="tooltip" title="Remover filtro"><i class="bi bi-arrow-counterclockwise"></i></a>
+                </div>
+            </div>
+        </form>
+        {% include "partials/messages.html" %}
+        <div class="list-minhas-consultas">
+            <table class="">
+                <thead>
+                    <tr>
+                        <th scope="col">Médico</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Data</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for consulta in minhas_consultas  %}
+                        <tr>
+                            <td class="text-start"><a href="{% url 'consulta' consulta.id %}">Dr(a). {{consulta.data_aberta.user}}</a></td>
+                            <td>{{consulta.get_status_display}}</td>
+                            <td>{{consulta.data_aberta.data}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock 'body' %}

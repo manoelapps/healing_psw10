@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block 'title' %}Cadastro pessoa{% endblock 'title' %}
+
+{% block 'head' %}
+    <link rel="stylesheet" href="{% static 'geral/css/geral.css' %}">
+    <link rel="stylesheet" href="{% static 'geral/css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'usuarios/css/usuarios.css' %}">
+    <link rel="stylesheet" href="{% static 'plataforma/css/plataforma.css' %}">
+    <!--
+        <link rel="stylesheet" href="{% static 'medicos/css/medicos.css' %}">
+    -->
+{% endblock 'head' %}
+
+{% block 'body' %}
+
+    <div class="container inter">
+        <div class="mt-5 mx-5">
+            <p class="fw-700 fs-25 mb-2">Olá, <span class="color-dark">{{request.user.username.capitalize}}</span>.</p>
+            <p class="fw-700 fs-25 mb-2">Vamos realizar seu cadastro.</p>
+            <hr class="mt-2 mb-4">
+            {% include "partials/messages.html" %}
+            <form action="{% url 'cadastro_pessoa' %}" method="POST" enctype='multipart/form-data'>
+                {% csrf_token %}
+                <div class="d-flex justify-content-between">
+                    <!-- #TODO: adicionar o atributo required para os campos-->
+                    <div class="col-md-7 pe-4">
+                        <div class="mb-3">
+                            <label for="">Nome completo:</label> <i class="bi bi-asterisk align-text-top align-text-top"></i>
+                            <input type="text" class="form-control form-control-sm" name="nome" placeholder="Nome completo ..." value="{{nome}}" autofocus>
+                        </div>
+                        <div class="row">
+                            <div class="w-70 mb-3">
+                                <label for="">CNH/RG:</label> <i class="bi bi-asterisk align-text-top"></i>
+                                <input type="file" name="cnh_rg" class="form-control form-control-sm">
+                            </div>
+                            <div class="w-30 mb-3">
+                                <label for="">Data Nascimento:</label> <i class="bi bi-asterisk align-text-top"></i>
+                                <input type="date" name="data_nascimento" class="form-control form-control-sm" maxlength="8" value="{{data_nascimento}}">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-9 mb-3">
+                                <label for="">Foto do perfil:</label> <i class="bi bi-asterisk align-text-top"></i>
+                                <input type="file" name="foto" class="form-control form-control-sm">
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <label for="">CEP</label> <i class="bi bi-asterisk align-text-top"></i>
+                                <input type="text" name="cep"  id="cep" class="form-control form-control-sm" maxlength="8" value="{{cep}}" placeholder="CEP ...">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-10 mb-3">
+                                <label for="">Logradouro</label> <i class="bi bi-asterisk align-text-top"></i>
+                                <input type="text" name="logradouro" class="form-control form-control-sm" placeholder="Endereço ..." value="{{logradouro}}">
+                            </div>
+                            <div class="col-md mb-3">
+                                <label for="">Número:</label>
+                                <input type="number" name="numero" class="form-control form-control-sm" value="{{numero}}" placeholder="Nº ...">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md mb-3">
+                                <label for="">Bairro:</label> <i class="bi bi-asterisk align-text-top"></i>
+                                <input type="text" class="form-control form-control-sm" name="bairro" placeholder="Bairro ..." value="{{bairro}}">
+                            </div>
+                            <div class="col-md mb-3">
+                                <label for="">Cidade:</label> <i class="bi bi-asterisk align-text-top"></i>
+                                <input type="text" class="form-control form-control-sm" name="cidade" placeholder="Cidade ..." value="{{cidade}}">
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <label for="">UF: <i class="bi bi-asterisk align-text-top"></i></label>
+                                <input type="text" class="form-control form-control-sm" name="uf" placeholder="UF ..." value="{{uf}}">
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between gap-4">
+                            <div class="w-80 mb-3">
+                                <label for="">Descrição:</label>
+                                <textarea name="descricao" class="form-control form-control-sm">{{descricao}}</textarea>
+                            </div>
+                            <div class="d-flex align-items-end mb-3">
+                                <input type="submit" value="Salvar" class="btn-cadastro">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5 ps-4 border-start" id="area-medica">
+                        <p class="fw-600 fs-16 color-main text-center mb-1">Preencha esta parte somente se for médico</p>
+                        <div class="form-check mb-3">
+                            <input type="checkbox" name="sou_medico" id="sou_medico" class="form-check-input" {% if sou_medico %}checked{% endif %}>
+                            <label for="sou_medico" class="form-check-label fw-700">Sou Médico</label>
+                        </div>
+                        <div class="row">
+                            <div class="w-60 mb-3">
+                                <label for="">CRM:</label>
+                                <input type="text" class="form-control form-control-sm" name="crm" placeholder="CRM..." value="{{crm}}" autofocus>
+                            </div>
+                            <div class="w-40 mb-3">
+                                <label for="">Data do CRM:</label>
+                                <input type="date" name="data_crm" class="form-control form-control-sm" maxlength="8" value="{{data_crm}}">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="">Cédula de identidade médica (cim):</label>
+                            <input type="file" name="cim" class="form-control form-control-sm">
+                        </div>
+                        <div class="mb-3">
+                            <label for="">Especialidade médica:</label>
+                            <select name="especialidade" class="form-select form-select-sm">
+                                <option value="">- - -</option>
+                                {% for especialidade in especialidades %}
+                                    <option value="{{especialidade.id}}" 
+                                        {% if especialidade.id == especialidade_medica %} selected {% endif %}>
+                                        {{especialidade.nome}} 
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="">Valor consulta:</label>
+                            <input type="number" step="0.5" name="valor_consulta" class="form-control form-control-sm" value="{{valor_consulta}}">
+                        </div>
+                    </div>
+                </div>
+                
+            </form>
+        </div>
+
+    </div>
+
+{% endblock 'body' %}
+
+{% block 'script' %}    
+    <script src="{% static 'plataforma/js/cep.js' %}"></script>
+{% endblock 'script' %}

@@ -37,12 +37,12 @@
                     </div>
                 </form>
             </div>
-            <div class="col-md-5">
+            <div class="col-md">
                 {% if datas_abertas %}
                     <div class="d-flex align-items-center justify-content-between">
-                        <p class="fw-700 fs-25 mb-0 col-md-5">Horários:</p>
+                        <p class="fw-700 fs-25 mb-0 col-md-7">Horários:</p>
                         <input type="date" name="data-filter" class="form-control col-md" data-bs-tt="tooltip" title="Filtro" hx-get="{% url 'filtrar_horarios' %}" hx-trigger="change" hx-target="#tbody-horarios">
-                        <a href="{% url 'abrir_horario' %}" class="btn-secundario bsm-6 ms-3" data-bs-tt="tooltip" title="Remover filtro">
+                        <a href="{% url 'abrir_horario' %}" class="btn-secundario bsm-6 ms-4" data-bs-tt="tooltip" title="Remover filtro">
                             <i class="bi bi-arrow-counterclockwise"></i>
                         </a>
                     </div>

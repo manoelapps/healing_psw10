@@ -1,0 +1,11 @@
+<div class="d-flex align-items-center gap-3">
+    <div class=""><img src="{{paciente.foto.url}}" class="foto-perfil foto-perfil-md" alt="Foto do paciente"></div>
+    <div>
+        <p class="fw-700 fs-25 lh-1 mb-1">
+            <span class="color-dark">
+                {% if is_medico %}Dr(a). {% endif %}
+                {{paciente.nome}}</span>
+        </p>
+        <p class="fs-18 lh-1 mb-0"><em>{{legenda}}</em></p>
+    </div>
+</div>

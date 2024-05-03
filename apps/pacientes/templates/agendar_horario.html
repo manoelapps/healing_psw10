@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block 'title' %}Escolher horário{% endblock 'title' %}
+
+{% block 'head' %}
+    <link rel="stylesheet" href="{% static 'geral/css/geral.css' %}">
+    <link rel="stylesheet" href="{% static 'geral/css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'usuarios/css/usuarios.css' %}">
+    <link rel="stylesheet" href="{% static 'plataforma/css/plataforma.css' %}">
+    <link rel="stylesheet" href="{% static 'medicos/css/medicos.css' %}">
+{% endblock 'head' %}
+
+
+{% block 'body' %}
+
+    <div class="container inter">
+        <div class="row mt-5">
+            <div class="col-md-10">
+                {% include 'partials/paciente_topo.html' %}
+                <hr>
+                <div class="d-flex gap-3 mb-3">
+                    <img src="{{medico.foto.url}}" class="foto-perfil foto-perfil-lg" alt="">
+                    <div class="col-md">
+                        <h3 class="fw-600 fs-30 mb-0">Dr(a). {{medico.nome}} <i class="bi bi-patch-check-fill icon-main"></i></h3>
+                        <p class="fs-5 mb-0">{{medico.descricao}}</p>
+                        <!-- TODO: Colocar as estrelas -->
+                        <i class="bi bi-star-fill icon-main fs-25"></i>
+                        <i class="bi bi-star-half icon-main fs-25"></i>
+                    </div>
+                </div> 
+                <hr class="my-4">
+                {% include "partials/messages.html" %}
+                <p class="fw-700 fs-25">Horários disponíveis</p>
+                <div class="d-flex flex-wrap gap-4 mt-4">
+                    {% for data_aberta in datas_abertas %}
+                        <div class="">
+                            <a class="link" href="{% url 'escolher_horario' data_aberta.id %}">
+                                <div class='selecionar-dia'>
+                                    <div class="header-dias">
+                                        <span class="fw-600">
+                                        {{data_aberta.data|date:'F'}}
+                                        </span>
+                                        <span class="fw-600 dia-semana">
+                                        {{data_aberta.data|date:'l'}}
+                                        </span>
+                                    </div>
+                                    <div class="fw-600 conteudo-data">
+                                        {{data_aberta.data}}
+                                    </div>
+                                </div>
+                            </a>
+                            <br>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-md"></div>
+        </div>
+
+    </div>
+{% endblock 'body' %}

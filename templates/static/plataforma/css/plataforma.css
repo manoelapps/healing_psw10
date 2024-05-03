@@ -18,6 +18,31 @@
     gap: 1rem;
 }
 
+.foto-perfil {
+    border: 1px solid #9c9999;
+    border-radius: calc(100%/2);    
+}
+
+.foto-perfil-sm {
+    width: 60px;
+    height: 60px;
+}
+
+.foto-perfil-md {
+    width: 80px;
+    height: 80px;
+}
+
+.foto-perfil-lg {
+    width: 120px;
+    height: 120px;
+}
+
+.foto-perfil-xl {
+    width: 150px;
+    height: 150px;
+}
+
 .foto-perfil-card {
     width: 60px;
     height: 60px;

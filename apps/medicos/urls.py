@@ -2,7 +2,6 @@ from django.urls import path
 from . import views, htmx_views
 
 urlpatterns = [
-    path('cadastro/', views.cadastro_medico, name='cadastro_medico'),
     path('abrir-horario/', views.abrir_horario, name='abrir_horario'),
     path('deletar-horario/<int:id_horario>/', views.deletar_horario, name='deletar_horario'),
 ]
