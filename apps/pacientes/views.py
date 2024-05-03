@@ -4,13 +4,17 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.urls import reverse
-from plataforma.models import Pessoa, is_medico
+from plataforma.models import Pessoa, is_aprovado, is_medico
 from medicos.models import DatasAbertas
 from .models import Consulta
 
 
 @login_required
 def agendar_horario(request, id_medico):
+    pessoa_logada = Pessoa.objects.get(user=request.user)
+    if pessoa_logada.status != 'A':
+        return redirect(reverse('cadastro_analise'))
+    
     template_name = 'agendar_horario.html'
     if request.method == "GET":
         paciente = Pessoa.objects.get(user=request.user)
@@ -22,7 +26,8 @@ def agendar_horario(request, id_medico):
             'legenda': 'Agende sua consulta',
             'medico': medico, 
             'datas_abertas': datas_abertas,
-            'is_medico': is_medico(request.user)
+            'is_medico': is_medico(request.user),
+            'is_aprovado': is_aprovado(request.user),
         }
 
         return render(request, template_name, context)
@@ -30,6 +35,10 @@ def agendar_horario(request, id_medico):
 
 @login_required
 def escolher_horario(request, id_data_aberta):
+    pessoa_logada = Pessoa.objects.get(user=request.user)
+    if pessoa_logada.status != 'A':
+        return redirect(reverse('cadastro_analise'))
+    
     if request.method == "GET":
         data_aberta = get_object_or_404(DatasAbertas, id=id_data_aberta)
         medico_id = request.META['HTTP_REFERER'][-2]
@@ -59,6 +68,10 @@ def escolher_horario(request, id_data_aberta):
 
 @login_required
 def minhas_consultas(request):
+    pessoa_logada = Pessoa.objects.get(user=request.user)
+    if pessoa_logada.status != 'A':
+        return redirect(reverse('cadastro_analise'))
+    
     template_name = 'minhas_consultas.html'
     if request.method == "GET":
         status_consulta = Consulta.status_choices
@@ -71,7 +84,8 @@ def minhas_consultas(request):
             'legenda': 'Veja suas consultas',
             'status_consulta': status_consulta, 
             'minhas_consultas': minhas_consultas,
-            'is_medico': is_medico(request.user)
+            'is_medico': is_medico(request.user),
+            'is_aprovado': is_aprovado(request.user),
         }
 
         medico_filter = request.GET.get('medico')
@@ -98,6 +112,10 @@ def minhas_consultas(request):
 
 @login_required
 def consulta(request, id_consulta):
+    pessoa_logada = Pessoa.objects.get(user=request.user)
+    if pessoa_logada.status != 'A':
+        return redirect(reverse('cadastro_analise'))
+    
     template_name = 'consulta.html'
     if request.method == 'GET':
         paciente = Pessoa.objects.get(user=request.user)
@@ -121,7 +139,8 @@ def consulta(request, id_consulta):
             'status_consulta': status_consulta, 
             'dado_medico': dado_medico, 
             # 'documentos': documentos, 
-            'is_medico': is_medico(request.user)
+            'is_medico': is_medico(request.user),
+            'is_aprovado': is_aprovado(request.user),
         }
 
         return render(request, template_name, context)
@@ -129,6 +148,10 @@ def consulta(request, id_consulta):
 
 @login_required
 def cancelar_consulta(request, id_consulta):
+    pessoa_logada = Pessoa.objects.get(user=request.user)
+    if pessoa_logada.status != 'A':
+        return redirect(reverse('cadastro_analise'))
+    
     consulta = get_object_or_404(Consulta, id=id_consulta)
     if consulta.paciente != request.user:
         messages.add_message(

@@ -4,6 +4,10 @@ from django.contrib.auth.models import User
 from medicos.models import DatasAbertas, Especialidade
 
 
+def is_aprovado(user):
+    pessoa = Pessoa.objects.filter(user=user)
+    return pessoa[0].status == 'A' if pessoa else False
+
 def is_medico(user):
     pessoa = Pessoa.objects.filter(user=user)
     return pessoa[0].is_medico if pessoa else False

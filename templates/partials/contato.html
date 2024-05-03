@@ -1,9 +1,13 @@
-<h3 class="fs-25">Entre em contato</h3>
-<form action="#" method="POST">
-    {% csrf_token %}
-    <div class="mb-3">
-        <label for="descricao" class="form-label">Descreva o motivo</label>
-        <textarea class="form-control w-50" name="descricao" cols="30" rows="3"></textarea>
-    </div>
-    <input type="submit" class="btn-cadastro" value="Enviar">
-</form>
+<div class="w-50">
+    <hr>
+    {% include "partials/messages.html" %}
+    <h3 class="fs-25">Entre em contato</h3>
+    <form action="{% url 'cadastro_analise' %}" method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="motivo" class="form-label">Descreva o motivo do contato</label>
+            <textarea class="form-control" name="motivo" cols="30" rows="3" required></textarea>
+        </div>
+        <input type="submit" class="btn-cadastro" value="Enviar">
+    </form>
+</div>

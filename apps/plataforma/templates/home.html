@@ -14,96 +14,68 @@
 {% block 'body' %}
 
     <div class="container inter ps-5">
-        {% if paciente.status == 'S' %}
-            <div>
-                <p class="fw-700 fs-25 lh-1 mt-5">Olá, 
-                    <span class="color-dark">
-                        {% if is_medico %}Dr(a). {% endif %}
-                        {{request.user.username.capitalize}}</span>.
-                </p>
-                <p>Data cadastro: {{paciente.criado_em|date:'d/m/Y'}}</p>
-                {% if qtd_dias_desde_cadastro > 7 %}
-                    <p class="fw-500 fs-4 color-main"><em>O cadastro ainda não foi analisado.</em></p>
-                    {% include "partials/contato.html" %}
-                {% else %}
-                    <p class="fw-500 fs-4 color-main"><em>Aguarde a análise do seu cadastro.</em></p>
-                    <p>A análise será realizada em até 07 (sete) dias, após este prazo entre em contato.</p>
-                {% endif %}
-            </div>
-        {% elif paciente.status == 'R' %}
-            <div>
-                <p class="fw-700 fs-25 lh-1 mt-5">Olá, 
-                    <span class="color-dark">
-                        {% if is_medico %}Dr(a). {% endif %}
-                        {{request.user.username.capitalize}}</span>.
-                </p>
-                <p class="fw-500 fs-4 color-main"><em>Seu cadastro foi recusado, verifique seu e-mail.</em></p>
-                {% include "partials/contato.html" %}
-            </div>
-        {% else %}
-            <div class="row mt-5 gap-4">
-                {% include "partials/messages.html" %}
-                <div class="col-md">
-                    {% include 'partials/paciente_topo.html' %}
-                    <hr class="mt-3">
-                    <form action="{% url 'home' %}" post="GET">
-                        <div class="d-flex flex-wrap gap-4 row-gap-3 mb-3">
-                            {% for especialidade in especialidades %}
-                                <div class="especialidades">
-                                    <input type="checkbox" class="form-check-input" name="especialidades" id="especialidade_{{especialidade.id}}" value="{{especialidade.id}}">
-                                    <label class="form-check-label lh-1" for="especialidade_{{especialidade.id}}">
-                                        {{especialidade.nome}}
-                                    </label>
-                                </div>
-                            {% endfor %}
-                        </div>
-                        <div class="d-flex align-items-center gap-3">
-                            <input type="text" class="form-control" placeholder="Busque por profissionais e/ou especialidades ..." name="medico" autofocus>
-                            <button type="submit" value="filtrar" class="btn-cadastro bsm-6 data-bs-toggle="toggle" data-bs-tt="tooltip" title="Filtrar""><i class="bi bi-funnel-fill"></i></button>
-                            <a href="{% url 'home' %}" class="btn-secundario bsm-6" data-bs-tt="tooltip" title="Remove filtro">
-                                <i class="bi bi-arrow-counterclockwise"></i>
-                            </a>
-                        </div>
-                    </form>
-                    <hr class="my-4">
-                    <div class="list-medicos">
-                        {% for medico in medicos %}
-                            <div class="card-medicos">
-                                <div class="mb-3">
-                                    <div class=""><img src="{{medico.foto.url}}" class="foto-perfil foto-perfil-sm" alt="Foto do médico"></div>
-                                    <div class="">
-                                        <h3 class="fw-600 fs-18 mb-1">Dr(a). {{medico.nome}} <i class="bi bi-patch-check-fill icon-main"></i></h3>
-                                        <p class="fs-12 lh-1 mb-0">{{medico.descricao}}</p>
-                                        <!-- TODO: Colocar as estrelas -->
-                                        <i class="bi bi-star-fill icon-main"></i>
-                                        <i class="bi bi-star-half icon-main"></i>
-                                    </div>
-                                </div>  
-                                
-                                <p class="fs-10 lh-1"><i class="bi bi-map icon-main me-2"></i>{{medico.logradouro}}, {{medico.numero}}</p>
-                                <p class="fs-10 lh-1"><i class="bi bi-calendar2-week icon-main me-2"></i>Proxima data: 
-                                    {% if medico.proxima_data %}
-                                        {{medico.proxima_data.data}}
-                                    {% else %}
-                                        Aguarde uma data.
-                                    {% endif %}
-                                </p>
-                                <a href="{% url 'agendar_horario' medico.user.id %}" class="btn-cadastro py-1 d-inline-block">Agendar</a>
+        <div class="row mt-5 gap-4">
+            {% include "partials/messages.html" %}
+            <div class="col-md">
+                {% include 'partials/paciente_topo.html' %}
+                <hr class="mt-3">
+                <form action="{% url 'home' %}" post="GET">
+                    <div class="d-flex flex-wrap gap-4 row-gap-3 mb-3">
+                        {% for especialidade in especialidades %}
+                            <div class="especialidades">
+                                <input type="checkbox" class="form-check-input" name="especialidades" id="especialidade_{{especialidade.id}}" value="{{especialidade.id}}">
+                                <label class="form-check-label lh-1" for="especialidade_{{especialidade.id}}">
+                                    {{especialidade.nome}}
+                                </label>
                             </div>
-                            <br>
                         {% endfor %}
                     </div>
-                </div>
-                <div class="col-md-5">
-                    <p class="fw-700 fs-25">Lembretes</p>
-                    {% for consulta in consultas_agendadas %}
-                        <p class="bg-main-lembrete">
-                            <span class="fs-12"><i class="bi bi-exclamation-triangle-fill icon-differential fs-5 me-3"></i>Consulta com {{consulta.data_aberta.user}} em {{consulta.data_aberta.data|date:'d/m/Y H:i'}} ({{consulta.data_aberta.qtd_dias}}).</span>
-                        </p>
+                    <div class="d-flex align-items-center gap-3">
+                        <input type="text" class="form-control" placeholder="Busque por profissionais e/ou especialidades ..." name="medico" autofocus>
+                        <button type="submit" value="filtrar" class="btn-cadastro bsm-6 data-bs-toggle="toggle" data-bs-tt="tooltip" title="Filtrar""><i class="bi bi-funnel-fill"></i></button>
+                        <a href="{% url 'home' %}" class="btn-secundario bsm-6" data-bs-tt="tooltip" title="Remove filtro">
+                            <i class="bi bi-arrow-counterclockwise"></i>
+                        </a>
+                    </div>
+                </form>
+                <hr class="my-4">
+                <div class="list-medicos">
+                    {% for medico in medicos %}
+                        <div class="card-medicos">
+                            <div class="mb-3">
+                                <div class=""><img src="{{medico.foto.url}}" class="foto-perfil foto-perfil-sm" alt="Foto do médico"></div>
+                                <div class="">
+                                    <h3 class="fw-600 fs-18 mb-1">Dr(a). {{medico.nome}} <i class="bi bi-patch-check-fill icon-main"></i></h3>
+                                    <p class="fs-12 lh-1 mb-0">{{medico.descricao}}</p>
+                                    <!-- TODO: Colocar as estrelas -->
+                                    <i class="bi bi-star-fill icon-main"></i>
+                                    <i class="bi bi-star-half icon-main"></i>
+                                </div>
+                            </div>  
+                            
+                            <p class="fs-10 lh-1"><i class="bi bi-map icon-main me-2"></i>{{medico.logradouro}}, {{medico.numero}}</p>
+                            <p class="fs-10 lh-1"><i class="bi bi-calendar2-week icon-main me-2"></i>Proxima data: 
+                                {% if medico.proxima_data %}
+                                    {{medico.proxima_data.data}}
+                                {% else %}
+                                    Aguarde uma data.
+                                {% endif %}
+                            </p>
+                            <a href="{% url 'agendar_horario' medico.user.id %}" class="btn-cadastro py-1 d-inline-block">Agendar</a>
+                        </div>
+                        <br>
                     {% endfor %}
                 </div>
             </div>
-        {% endif %}
+            <div class="col-md-5">
+                <p class="fw-700 fs-25">Lembretes</p>
+                {% for consulta in consultas_agendadas %}
+                    <p class="bg-main-lembrete">
+                        <span class="fs-12"><i class="bi bi-exclamation-triangle-fill icon-differential fs-5 me-3"></i>Consulta com {{consulta.data_aberta.user}} em {{consulta.data_aberta.data|date:'d/m/Y H:i'}} ({{consulta.data_aberta.qtd_dias}}).</span>
+                    </p>
+                {% endfor %}
+            </div>
+        </div>
     </div>
 
 {% endblock 'body' %}

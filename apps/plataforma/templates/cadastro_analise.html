@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block 'title' %}Cadastro{% endblock 'title' %}
+
+{% block 'head' %}
+    <link rel="stylesheet" href="{% static 'geral/css/geral.css' %}">
+    <link rel="stylesheet" href="{% static 'geral/css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'usuarios/css/usuarios.css' %}">
+    <link rel="stylesheet" href="{% static 'plataforma/css/plataforma.css' %}">
+{% endblock 'head' %}
+
+{% block 'body' %}
+
+    <div class="container inter ps-5">
+        {% if pessoa.status == 'S' %}
+            <div>
+                <p class="fw-700 fs-25 lh-1 mt-5">Olá, 
+                    <span class="color-dark">
+                        {{request.user.username.capitalize}}
+                    </span>.
+                </p>
+                <p>Data cadastro: {{pessoa.criado_em|date:'d/m/Y'}}</p>
+                {% if qtd_dias_desde_cadastro > 1 %}
+                    <p class="fw-500 fs-4 color-main"><em>O cadastro ainda não foi analisado.</em></p>
+                    {% include "partials/contato.html" %}
+                {% else %}
+                    <p class="fw-500 fs-4 color-main"><em>Aguarde a análise do seu cadastro.</em></p>
+                    <p>A análise será realizada em até 07 (sete) dias, após este prazo entre em contato.</p>
+                {% endif %}
+            </div>
+        {% elif pessoa.status == 'R' %}
+            <div>
+                <p class="fw-700 fs-25 lh-1 mt-5">Olá, 
+                    <span class="color-dark">
+                        {{request.user.username.capitalize}}
+                    </span>.
+                </p>
+                <p class="fw-500 fs-4 color-main"><em>Seu cadastro foi recusado, verifique seu e-mail.</em></p>
+                {% include "partials/contato.html" %}
+            </div>
+        {% endif %}
+
+    </div>
+
+{% endblock 'body' %}

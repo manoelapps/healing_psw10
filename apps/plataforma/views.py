@@ -1,17 +1,23 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 from django.shortcuts import render, redirect
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail
 from django.urls import reverse
 from medicos.models import Especialidade
 from pacientes.models import Consulta
-from .models import is_medico, Pessoa
+from .models import Pessoa, is_aprovado, is_medico
 
 
 @login_required
 def cadastro_pessoa(request):
     template_name = 'cadastro_pessoa.html'
-    # pessoa_logada = Pessoa.objects.get(user=request.user)
+
+    pessoa_logada = Pessoa.objects.get(user=request.user)
+    if pessoa_logada.status != 'A':
+        return redirect(reverse('cadastro_analise'))
+
     if Pessoa.objects.filter(user=request.user.id):
         return redirect(reverse('home'))
 
@@ -25,6 +31,7 @@ def cadastro_pessoa(request):
         'especialidades': especialidades,
         # 'pessoa': pessoa_logada,
         'is_medico': is_medico(request.user),
+        'is_aprovado': is_aprovado(request.user),
     }
 
     if request.method == "POST":
@@ -130,7 +137,52 @@ def cadastro_pessoa(request):
 
 
 @login_required
+def cadastro_analise(request):
+    template_name = 'cadastro_analise.html'
+    pessoa_logada = Pessoa.objects.get(user=request.user)
+    qtd_dias_desde_cadastro = (datetime.now().date() - pessoa_logada.criado_em.date()).days
+
+    context = {
+        'pessoa': pessoa_logada,
+        'is_medico': is_medico(request.user),
+        'is_aprovado': is_aprovado(request.user),
+        'qtd_dias_desde_cadastro': qtd_dias_desde_cadastro
+    }
+
+    if request.method == 'POST':
+        motivo = request.POST.get('motivo')
+
+        if len(motivo.strip()) == 0:
+            messages.add_message(request, messages.WARNING, 'Motivo não preenchido!')
+            return redirect(reverse('cadastro_analise'))
+        
+        assunto = 'HEALING - Análise cadastro'
+        mensagem = f"""Olá,
+        
+        {motivo}
+        """
+
+        if send_mail(
+            assunto,
+            mensagem,
+            request.user.email,
+            [settings.EMAIL_HOST_USER,]
+        ):
+            messages.add_message(request, messages.SUCCESS, f"E-mail enviado com sucesso, aguarde resposta.")
+        else:
+            messages.add_message(request, messages.ERROR, 'Não foi possível enviar o e-mail!')
+
+        return redirect(reverse('cadastro_analise'))
+
+    return render(request, template_name, context)
+    
+
+@login_required
 def home(request):
+    pessoa_logada = Pessoa.objects.get(user=request.user)
+    if pessoa_logada.status != 'A':
+        return redirect(reverse('cadastro_analise'))
+    
     template_name = 'home.html'
     paciente = Pessoa.objects.get(user=request.user)
     medicos = Pessoa.objects.filter(is_medico=True).exclude(user=request.user)
@@ -156,6 +208,7 @@ def home(request):
         'especialidades': especialidades,
         'consultas_agendadas': consultas_agendadas,
         'is_medico': is_medico(request.user),
+        'is_aprovado': is_aprovado(request.user),
         'qtd_dias_desde_cadastro': qtd_dias_desde_cadastro
     }
 

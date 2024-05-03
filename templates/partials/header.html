@@ -9,21 +9,23 @@
             </button>
             <div class="collapse navbar-collapse fs-25" id="navbarNav">
                 <ul class="navbar-nav align-items-center gap-3">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarPacientes" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Paciente
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarPacientes">
-                            <li><a class="dropdown-item" href="{% url 'home' %}">Agendamento</a></li>
-                            <!--
-                            <li>
-                                <a class="dropdown-item" href="{ url 'cadastro_atualizar' %}">Atualizar</a>
-                            </li>
-                            -->
-                            <li><a class="dropdown-item" href="{% url 'minhas_consultas' %}">Minhas consultas</a></li>
-                        </ul>
-                    </li>
-                    {% if is_medico %}
+                    {% if is_aprovado %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarPacientes" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Paciente
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarPacientes">
+                                <li><a class="dropdown-item" href="{% url 'home' %}">Agendamento</a></li>
+                                <!--
+                                <li>
+                                    <a class="dropdown-item" href="{ url 'cadastro_atualizar' %}">Atualizar</a>
+                                </li>
+                                -->
+                                <li><a class="dropdown-item" href="{% url 'minhas_consultas' %}">Minhas consultas</a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
+                    {% if is_medico and is_aprovado %}
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarMedicos" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Médico

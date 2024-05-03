@@ -148,4 +148,11 @@ MESSAGE_TAGS = {
     constants.WARNING: 'alert-warning'
 }
 
+# Redirect 
+
 LOGIN_URL = 'login'
+
+# Django Mail
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')

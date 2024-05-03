@@ -4,12 +4,15 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.urls import reverse
 from .models import DatasAbertas
-from plataforma.models import is_medico, Pessoa
+from plataforma.models import Pessoa, is_aprovado, is_medico
 
 
 @login_required
 def abrir_horario(request):
-
+    pessoa_logada = Pessoa.objects.get(user=request.user)
+    if pessoa_logada.status != 'A':
+        return redirect(reverse('cadastro_analise'))
+    
     if not is_medico(request.user):
         messages.add_message(request, messages.WARNING, 'Somente médicos podem acessar essa página, você foi redirecionado !')
         return redirect(reverse('home'))
@@ -21,7 +24,8 @@ def abrir_horario(request):
     context = {
         'medico': medico,
         'datas_abertas': datas_abertas,
-        'is_medico': is_medico(request.user)
+        'is_medico': is_medico(request.user),
+        'is_aprovado': is_aprovado(request.user),
     }
 
     if request.method == "POST":
@@ -60,13 +64,17 @@ def abrir_horario(request):
 
 @login_required
 def deletar_horario(request, id_horario):
+    pessoa_logada = Pessoa.objects.get(user=request.user)
+    if pessoa_logada.status != 'A':
+        return redirect(reverse('cadastro_analise'))
+    
     data_aberta = get_object_or_404(DatasAbertas, id=id_horario)
     if data_aberta.user != request.user:
         messages.add_message(request, messages.ERROR, 'Esta data/horário não lhe pertence !') 
         return redirect(reverse('abrir_horario'))
     
     if data_aberta.agendada:
-        messages.add_message(request, messages.ERROR, 'Esta data/horário não pode ser excluído, pois está agendada !') 
+        messages.add_message(request, messages.ERROR, 'Esta data/horário não pode ser excluída, pois está agendada !') 
         return redirect(reverse('abrir_horario'))
 
     try:
