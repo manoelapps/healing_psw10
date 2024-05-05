@@ -11,8 +11,7 @@ from .models import Consulta
 
 @login_required
 def agendar_horario(request, id_medico):
-    pessoa_logada = Pessoa.objects.get(user=request.user)
-    if pessoa_logada.status != 'A':
+    if not is_aprovado(request.user):
         return redirect(reverse('cadastro_analise'))
     
     template_name = 'agendar_horario.html'
@@ -35,8 +34,7 @@ def agendar_horario(request, id_medico):
 
 @login_required
 def escolher_horario(request, id_data_aberta):
-    pessoa_logada = Pessoa.objects.get(user=request.user)
-    if pessoa_logada.status != 'A':
+    if not is_aprovado(request.user):
         return redirect(reverse('cadastro_analise'))
     
     if request.method == "GET":
@@ -68,8 +66,7 @@ def escolher_horario(request, id_data_aberta):
 
 @login_required
 def minhas_consultas(request):
-    pessoa_logada = Pessoa.objects.get(user=request.user)
-    if pessoa_logada.status != 'A':
+    if not is_aprovado(request.user):
         return redirect(reverse('cadastro_analise'))
     
     template_name = 'minhas_consultas.html'
@@ -77,7 +74,7 @@ def minhas_consultas(request):
         status_consulta = Consulta.status_choices
         # minhas_consultas = Consulta.objects.filter(paciente=request.user).filter(data_aberta__data__gte=datetime.now())
         paciente = Pessoa.objects.get(user=request.user)
-        minhas_consultas = Consulta.objects.filter(paciente=paciente.user)
+        minhas_consultas = Consulta.objects.filter(paciente=paciente)
 
         context = {
             'paciente': paciente, 
@@ -112,8 +109,7 @@ def minhas_consultas(request):
 
 @login_required
 def consulta(request, id_consulta):
-    pessoa_logada = Pessoa.objects.get(user=request.user)
-    if pessoa_logada.status != 'A':
+    if not is_aprovado(request.user):
         return redirect(reverse('cadastro_analise'))
     
     template_name = 'consulta.html'
@@ -148,8 +144,7 @@ def consulta(request, id_consulta):
 
 @login_required
 def cancelar_consulta(request, id_consulta):
-    pessoa_logada = Pessoa.objects.get(user=request.user)
-    if pessoa_logada.status != 'A':
+    if not is_aprovado(request.user):
         return redirect(reverse('cadastro_analise'))
     
     consulta = get_object_or_404(Consulta, id=id_consulta)

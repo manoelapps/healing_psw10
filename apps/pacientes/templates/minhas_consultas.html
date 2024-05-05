@@ -54,9 +54,9 @@
                 <tbody>
                     {% for consulta in minhas_consultas  %}
                         <tr>
-                            <td class="text-start"><a href="{% url 'consulta' consulta.id %}">Dr(a). {{consulta.data_aberta.user}}</a></td>
+                            <td class="text-start"><a href="{% url 'consulta' consulta.id %}">Dr(a). {{consulta.data_aberta.get_nome_user}}</a></td>
                             <td>{{consulta.get_status_display}}</td>
-                            <td>{{consulta.data_aberta.data}}</td>
+                            <td>{{consulta.data_aberta.data|date:'d/m/Y H:i'}}</td>
                         </tr>
                     {% endfor %}
                 </tbody>

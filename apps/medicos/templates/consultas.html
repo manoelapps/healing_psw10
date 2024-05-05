@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block 'title' %}Consultas médicas{% endblock 'title' %}
+
+{% block 'head' %}
+    <link rel="stylesheet" href="{% static 'geral/css/geral.css' %}">
+    <link rel="stylesheet" href="{% static 'geral/css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'usuarios/css/usuarios.css' %}">
+    <link rel="stylesheet" href="{% static 'plataforma/css/plataforma.css' %}">
+    <link rel="stylesheet" href="{% static 'medicos/css/medicos.css' %}">
+{% endblock 'head' %}
+
+{% block 'body' %}
+
+    <div class="container inter pt-5">
+
+        {% include "partials/messages.html" %}
+        <h2><span class="color-dark">Suas consultas</span></h2>
+
+        <form action="{% url 'consultas_medico' %}" method="GET">
+            <div class="d-flex gap-4">
+                <div class="mb-3">
+                    <input type="text" name="paciente" value="{{paciente_filter}}" class="form-control shadow-main-color" placeholder="Paciente ...">
+                </div>
+                <div class="mb-3">
+                    <select name="status" class="form-select">
+                        <option value="">- - -</option>
+                        {% for status in status_consulta %}
+                            <option value="{{status.0}}"
+                            {% if status.0 == status_filter %}selected{% endif %}>{{status.1}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <input type="month" name="data" value="{{data_filter}}" class="form-control shadow-main-color" placeholder="Data da consulta">
+                </div>
+                <div class="mb-3">
+                    <input type="submit" value="Filtrar" class="btn-cadastro bsm-6">
+                </div>
+                <div class="mb-3 d-flex align-items-end">
+                    <a href="{% url 'consultas_medico' %}" class="btn-secundario btn-filtro" data-bs-tt="tooltip" title="Remover filtro"><i class="bi bi-arrow-counterclockwise"></i></a>
+                </div>
+            </div>
+        </form>
+
+        <br>
+        
+        <h2><span class="color-dark">Hoje</span></h2>
+        {% if consultas_hoje %}
+            <div class="list-minhas-consultas">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Paciente</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Data</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for consulta in consultas_hoje  %}
+                            <tr>
+                                <th scope="row">1</th>
+                                <td class="text-start"><a href="{% url 'consulta_detalhe' consulta.id %}">{{consulta.paciente.nome}}</a></td>
+                                <td>{{consulta.get_status_display}}</td>
+                                <td>{{consulta.data_aberta.data|date:'d/m/Y H:i'}}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="fw-500 fs-30 text-center text-info">Não há consultas para hoje !</p>
+        {% endif %}
+        <hr>
+        
+
+        <h2><span class="color-dark">Restantes</span></h2>
+        {% if consultas_restantes %}
+        <div class="list-minhas-consultas">
+            <table class="">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Paciente</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Data</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for consulta in consultas_restantes  %}
+                        <tr>
+                            <th scope="row">{{forloop.counter}}</th>
+                            <td class="text-start"><a href="{% url 'consulta_detalhe' consulta.id %}">{{consulta.paciente.nome}}</a></td>
+                            <td>{{consulta.get_status_display}}</td>
+                            <td>{{consulta.data_aberta.data|date:'d/m/Y H:i'}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+        {% else %}
+        <p class="fw-500 fs-30 text-center text-info">Não há consultas futuras !</p>
+        {% endif %}
+    </div>
+
+{% endblock 'body' %}

@@ -12,11 +12,10 @@ from .models import Pessoa, is_aprovado, is_medico
 
 @login_required
 def cadastro_pessoa(request):
-    template_name = 'cadastro_pessoa.html'
-
-    pessoa_logada = Pessoa.objects.get(user=request.user)
-    if pessoa_logada.status != 'A':
+    if not is_aprovado(request.user):
         return redirect(reverse('cadastro_analise'))
+    
+    template_name = 'cadastro_pessoa.html'
 
     if Pessoa.objects.filter(user=request.user.id):
         return redirect(reverse('home'))
@@ -138,6 +137,9 @@ def cadastro_pessoa(request):
 
 @login_required
 def cadastro_analise(request):
+    if is_aprovado(request.user):
+        return redirect(reverse('home'))
+    
     template_name = 'cadastro_analise.html'
     pessoa_logada = Pessoa.objects.get(user=request.user)
     qtd_dias_desde_cadastro = (datetime.now().date() - pessoa_logada.criado_em.date()).days
@@ -179,8 +181,7 @@ def cadastro_analise(request):
 
 @login_required
 def home(request):
-    pessoa_logada = Pessoa.objects.get(user=request.user)
-    if pessoa_logada.status != 'A':
+    if not is_aprovado(request.user):
         return redirect(reverse('cadastro_analise'))
     
     template_name = 'home.html'

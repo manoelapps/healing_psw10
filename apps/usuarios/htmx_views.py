@@ -7,8 +7,18 @@ def check_username(request):
     username = request.GET.get('username')
 
     try:
-        user = User.objects.get(username=username)
+        user = User.objects.get(username=username.lower())
         return HttpResponse('Este username já existe !')
+    except User.DoesNotExist:
+        return HttpResponse('')
+
+
+def check_email(request):
+    email = request.GET.get('email')
+
+    try:
+        user = User.objects.get(email=email.lower())
+        return HttpResponse('Este e-mail já existe !')
     except User.DoesNotExist:
         return HttpResponse('')
 

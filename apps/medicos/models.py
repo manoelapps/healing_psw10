@@ -1,6 +1,6 @@
 from datetime import datetime
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
 
 
 class Especialidade(models.Model):
@@ -24,10 +24,14 @@ class DatasAbertas(models.Model):
     def qtd_dias(self):
         qtd_dias = (self.data.date() - datetime.now().date()).days
         return f'{qtd_dias} dias' if qtd_dias > 1 else f'{qtd_dias} dia'
+    
+    @property
+    def get_nome_user(self):
+        from plataforma.models import Pessoa
+        return Pessoa.objects.get(user=self.user).nome
 
     class Meta:
         verbose_name_plural = 'Datas abertas'
 
     def __str__(self):
         return str(self.data)
-

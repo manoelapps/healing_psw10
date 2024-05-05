@@ -13,11 +13,12 @@
             <div class="my-3">
                 <label>Username</label>
                 <input type="text" class="form-control" name="username" placeholder="Usuário ..." value="{{username}}" hx-get="{% url 'check_username' %}" hx-trigger="keyup" hx-target="#check-out" required autofocus>
-                <span class="fw-600 text-danger" id="check-out"></span>
+                <span class="text-danger" id="check-out"></span>
             </div>
             <div class="my-3">
                 <label>E-mail</label>
-                <input type="email" class="form-control" name="email" placeholder="email@email.com" value="{{email}}" required autofocus>
+                <input type="email" class="form-control" name="email" placeholder="email@email.com" value="{{email}}" hx-get="{% url 'check_email' %}" hx-trigger="keyup" hx-target="#check-out-email"  required autofocus>
+                <span class="text-danger" id="check-out-email"></span>
             </div>
             <div class="box-senhas">
                 <div class="mb-3">

@@ -52,7 +52,7 @@ def cadastro(request):
         
         try:
             User.objects.create_user(
-                username=username,
+                username=username.lower(),
                 email=email,
                 password=senha
             )
@@ -84,13 +84,13 @@ def logar(request):
             )
             return render(request, template_name, context)
         
-        if not User.objects.filter(username=username):
+        if not User.objects.filter(username=username.lower()):
             messages.add_message(
                 request, messages.ERROR, 'Usuário não cadastrado !'
             )
             return render(request, template_name, context)
         
-        user = authenticate(request, username=username, password=senha)
+        user = authenticate(request, username=username.lower(), password=senha)
 
         if user:
             login(request, user)

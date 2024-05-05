@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block 'title' %}Detalhes da consulta{% endblock 'title' %}
+
+{% block 'head' %}
+    <link rel="stylesheet" href="{% static 'geral/css/geral.css' %}">
+    <link rel="stylesheet" href="{% static 'geral/css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'usuarios/css/usuarios.css' %}">
+    <link rel="stylesheet" href="{% static 'plataforma/css/plataforma.css' %}">
+    <link rel="stylesheet" href="{% static 'medicos/css/medicos.css' %}">
+{% endblock 'head' %}
+
+{% block 'body' %}
+
+    <div class="container inter pt-5">
+        {% include "partials/messages.html" %}
+        <div class="row gap-4">
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="d-flex gap-3">
+                        <img class="foto-perfil foto-perfil-md" src="{{paciente.foto.url}}" alt="Foto do paciente">
+                        <div>
+                            <p class="fs-30 mb-0">Paciente: <span class="fw-600">{{paciente.nome}}</span> <i class="bi bi-patch-check-fill icon-main"></i></p>
+                            <p class="fs-5">Horário: <span class="fw-500">{{consulta.data_aberta.data}}</span></p>
+                        </div>
+                    </div>
+                </div> 
+                <hr>
+                <div class="d-flex gap-5">
+                    {% for status in status_consulta %}
+                        <div>
+                            <i class="bi bi-check-circle-fill {% if consulta.status == status.0 %}color-dark{% endif %}"></i>
+                            {{ status.1 }}
+                        </div>
+                    {% endfor %}
+                </div>
+                <hr>
+                <h3 class="fw-600 mb-3">Detalhes da consulta</h3>
+                <div class="d-flex justify-content-between">
+                    <div class="w-50">
+                        <p class="fs-5"><i class="bi bi-calendar3 color-dark"></i>&nbsp {{consulta.data_aberta.data}}</p>
+                        <p class="fs-5 mb-4"><i class="bi bi-tag-fill color-dark"></i> R$ {{consulta.valor}}</p>
+                        <a href="#" class="btn-secundario bsm-6 not-active">Adicionar ao meu calendário</a>
+                    </div>
+                    {% if consulta.status == 'I' %}
+                        <div class="w-50">
+                            <form action="{% url 'finalizar_consulta' consulta.id %}" method="POST">
+                                {% csrf_token %}
+                                <textarea name="anotacoes" class="form-control form-control-sm mb-3" rows="3" placeholder="Deixe suas anotações médicas ..."></textarea>
+                                <input type="submit" class="btn btn-primary" value="Finalizar consulta">
+                            </form>
+                        </div>
+                    {% endif %}
+                </div>
+                <hr>
+                <h3 class="fw-600">Como acessar ?</h3>
+                <form action="{% url 'consulta_detalhe' consulta.id %}" method="POST">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label>Adicione o link do google meet para iniciar a consulta</label>
+                        <input type="text" name="link" class="form-control shadow-main-color" id="" placeholder="Link ..." value="{% if consulta.link %}{{consulta.link}}{% endif %}">
+                    </div>
+                    <input type="submit" class="btn-cadastro bsm-6 {% if consulta.status != 'A' %}not-active{% endif %}" value="Iniciar consulta">
+                </form>
+                <hr>
+            </div>
+            <div class="col-md">
+                {% if consulta.status == 'F' or consulta.status == 'I' %}
+                    <h3 class="fw-600 mb-4">Documentos para o paciente</h3>
+                    <form action="{% url 'add_documento' consulta.id %}" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="text" name="titulo" class="form-control mb-3" placeholder="Titulo ..." value="{{titulo}}">
+                        <input type="file" name="documento" class="form-control mb-4">
+                        <input type="submit" class="btn-cadastro bsm-6 mb-4" value="Adicionar documento">
+                    </form>
+                    <hr>
+                    {% if documentos %}
+                        <h5 class="text-center">Lista de documentos</h5>
+                        <ul class="doc">
+                            {% for doc in documentos %}
+                                <li><a href="{{doc.documento.url}}" target="_blank"><i class="bi bi-file-earmark-arrow-down me-2"></i>{{doc.titulo}} - {{doc.consulta.data_aberta.data.year}}</a></li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p class="text-danger text-center">Nenhum documento adicionado !</p>
+                    {% endif %}
+                    <hr>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+{% endblock 'body' %}
