@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="{% static 'geral/css/geral.css' %}">
     <link rel="stylesheet" href="{% static 'geral/css/header.css' %}">
     <link rel="stylesheet" href="{% static 'usuarios/css/usuarios.css' %}">
+    <link rel="stylesheet" href="{% static 'plataforma/css/plataforma.css' %}">
     <link rel="stylesheet" href="{% static 'medicos/css/medicos.css' %}">
 {% endblock 'head' %}
 
@@ -15,15 +16,16 @@
     <div class="container inter">
         <div class="row gap-4 mt-5">
             <div class="col-md">
-                <div class="mb-3">
-                    <img src="{{medico.foto.url}}" class="foto-perfil" alt="Foto do médico">
-                    <label class="fw-700 fs-25 ms-4">Olá, <span class="color-dark">{{request.user.username.capitalize}}</span>.</label>
+                <div class="d-flex align-items-center mb-3">
+                    <img src="{{medico.foto.url}}" class="foto-perfil foto-perfil-lg" alt="Foto do médico">
+                    <div class="ms-4">
+                        <p class="fw-700 fs-25 mb-0">Olá,</p>
+                        <p class="fw-700 fs-25 mb-1"><span class="color-dark">Dr(a). {{medico.nome}}</span></p>
+                        <p class="fs-5 mb-0"><em>Abra horários para consultas</em></p>
+                    </div>
                 </div>
-                <p class="fw-700 fs-25">Abrir horários para consultas</p>
-                <hr class="mb-5">
-
+                <hr class="mb-4">
                 {% include "partials/messages.html" %}
-
                 <form action="{% url 'abrir_horario' %}" method="POST">
                     {% csrf_token %}
                     <div class="d-flex gap-4 align-items-end">
@@ -68,7 +70,7 @@
                                             <i class="bi bi-hand-thumbs-down-fill text-info"></i>
                                         {% endif %}
                                     </td>
-                                    <td><a href="{% url 'deletar_horario' data.id %}" class="btn btn-danger btn-sm" data-bs-tt="tooltip" title="Excluir"><i class="bi bi-trash2-fill"></i></a></td>
+                                    <td><a href="{% url 'deletar_horario' data.id %}" class="btn btn-sm text-danger" data-bs-tt="tooltip" title="Excluir"><i class="bi bi-trash2-fill"></i></a></td>
                                 </tr>
                             {% endfor %}
                         </tbody>

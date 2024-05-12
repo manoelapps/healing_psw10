@@ -8,6 +8,7 @@ urlpatterns = [
     path('consulta-detalhe/<int:id_consulta>/', views.consulta_detalhe, name='consulta_detalhe'),
     path('add_documento/<int:id_consulta>/', views.add_documento, name="add_documento"),
     path('finalizar-consulta/<int:id_consulta>/', views.finalizar_consulta, name='finalizar_consulta'),
+    path('desempenho/', views.desempenho_medico, name='desempenho_medico'),
 ]
 
 htmx_urlpatterns = [

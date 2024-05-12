@@ -6,7 +6,7 @@ from django.db import transaction
 from django.urls import reverse
 from plataforma.models import Pessoa, is_aprovado, is_medico
 from medicos.models import DatasAbertas
-from .models import Consulta
+from .models import Avaliacao, Consulta, Documento
 
 
 @login_required
@@ -18,7 +18,7 @@ def agendar_horario(request, id_medico):
     if request.method == "GET":
         paciente = Pessoa.objects.get(user=request.user)
         medico = Pessoa.objects.get(user=id_medico)
-        datas_abertas = DatasAbertas.objects.filter(user=medico.user).filter(data__gte=datetime.now()).filter(agendada=False)
+        datas_abertas = DatasAbertas.objects.filter(user=medico.user).filter(data__gte=datetime.now()).filter(agendada=False).order_by('data')
 
         context = {
             'paciente': paciente, 
@@ -47,7 +47,7 @@ def escolher_horario(request, id_data_aberta):
             return redirect(f'/pacientes/agendar-horario/{medico_id}')
 
         horario_agendado = Consulta(
-            paciente=request.user,
+            paciente= Pessoa.objects.get(user=request.user),
             data_aberta=data_aberta
         )
 
@@ -116,7 +116,11 @@ def consulta(request, id_consulta):
     if request.method == 'GET':
         paciente = Pessoa.objects.get(user=request.user)
         consulta = get_object_or_404(Consulta, id=id_consulta)
-        if consulta.paciente != request.user:
+        avaliacao = Avaliacao.objects.filter(consulta=consulta)
+        if avaliacao:
+            avaliacao = avaliacao[0]
+
+        if consulta.paciente != paciente:
             messages.add_message(
                 request, 
                 messages.ERROR, 
@@ -125,18 +129,19 @@ def consulta(request, id_consulta):
             return redirect(reverse('minhas_consultas')) 
         
         status_consulta = Consulta.status_choices
-        dado_medico = Pessoa.objects.get(user=consulta.data_aberta.user)
-        # documentos = Documento.objects.filter(consulta=consulta)
+        medico = Pessoa.objects.get(user=consulta.data_aberta.user)
+        documentos = Documento.objects.filter(consulta=consulta)
 
         context = {
             'paciente': paciente, 
             'legenda': 'Veja sua consulta detalhada',
             'consulta': consulta, 
             'status_consulta': status_consulta, 
-            'dado_medico': dado_medico, 
-            # 'documentos': documentos, 
+            'medico': medico, 
+            'documentos': documentos, 
             'is_medico': is_medico(request.user),
             'is_aprovado': is_aprovado(request.user),
+            'avaliacao': avaliacao
         }
 
         return render(request, template_name, context)
@@ -148,7 +153,7 @@ def cancelar_consulta(request, id_consulta):
         return redirect(reverse('cadastro_analise'))
     
     consulta = get_object_or_404(Consulta, id=id_consulta)
-    if consulta.paciente != request.user:
+    if consulta.paciente != Pessoa.objects.get(user=request.user):
         messages.add_message(
             request, 
             messages.ERROR, 
@@ -182,4 +187,42 @@ def cancelar_consulta(request, id_consulta):
 
         return redirect(reverse('minhas_consultas')) 
 
-#TODO: Consultar medicamentos semelhantes via api anvisa
+
+@login_required
+def avaliar_consulta(request, id_consulta):
+    if not is_aprovado(request.user):
+        return redirect(reverse('cadastro_analise'))
+    
+    if request.method == 'POST':
+        consulta = get_object_or_404(Consulta, id=id_consulta)
+
+        if consulta.paciente != Pessoa.objects.get(user=request.user):
+            messages.add_message(
+                request, 
+                messages.ERROR, 
+                'A consulta que você tentou avaliar não lhe pertence !'
+            )
+            return redirect(f'/pacientes/consulta/{id_consulta}/')
+
+        if consulta.status != 'F':
+            messages.add_message(
+                request, 
+                messages.ERROR, 
+                'Esta consulta ainda não pode ser avaliada, pois não foi finalizada !'
+            )
+            return redirect(f'/pacientes/consulta/{id_consulta}/')
+
+        avaliacao = Avaliacao(
+            consulta=consulta,
+            tempo_espera = request.POST.get('espera'),
+            satisfacao = request.POST.get('satisfacao'),
+        )
+
+        try:
+            avaliacao.save()
+            messages.add_message(request, messages.SUCCESS, 'Avaliação realizada com sucesso !'
+            )
+        except Exception as e:
+            messages.add_message(request, messages.ERROR, f'Erro: {e} !')
+
+        return redirect(f'/pacientes/consulta/{id_consulta}/')

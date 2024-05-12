@@ -12,25 +12,14 @@ from .models import Pessoa, is_aprovado, is_medico
 
 @login_required
 def cadastro_pessoa(request):
-    if not is_aprovado(request.user):
-        return redirect(reverse('cadastro_analise'))
-    
-    template_name = 'cadastro_pessoa.html'
-
     if Pessoa.objects.filter(user=request.user.id):
         return redirect(reverse('home'))
 
-    if is_medico(request.user):
-        messages.add_message(request, messages.WARNING, 'Redirecionado, pois vocé já consta como médico !')
-        return redirect(reverse('abrir_horario'))
-
+    template_name = 'cadastro_pessoa.html'
     especialidades = Especialidade.objects.all()
 
     context = {
         'especialidades': especialidades,
-        # 'pessoa': pessoa_logada,
-        'is_medico': is_medico(request.user),
-        'is_aprovado': is_aprovado(request.user),
     }
 
     if request.method == "POST":
@@ -193,7 +182,7 @@ def home(request):
     medico_filtrar = request.GET.get('medico')
     especialidades_filtrar = request.GET.getlist('especialidades')
 
-    consultas_usuario = Consulta.objects.filter(paciente=request.user)
+    consultas_usuario = Consulta.objects.filter(paciente=paciente)
     consultas_agendadas = consultas_usuario.filter(data_aberta__data__gte=datetime.now()).filter(status='A')
 
     if medico_filtrar:

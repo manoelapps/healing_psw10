@@ -43,12 +43,12 @@
                         <p class="fs-5 mb-4"><i class="bi bi-tag-fill color-dark"></i> R$ {{consulta.valor}}</p>
                         <a href="#" class="btn-secundario bsm-6 not-active">Adicionar ao meu calendário</a>
                     </div>
-                    {% if consulta.status == 'I' %}
+                    {% if consulta.status == 'I' or consulta.status == 'F' %}
                         <div class="w-50">
                             <form action="{% url 'finalizar_consulta' consulta.id %}" method="POST">
                                 {% csrf_token %}
-                                <textarea name="anotacoes" class="form-control form-control-sm mb-3" rows="3" placeholder="Deixe suas anotações médicas ..."></textarea>
-                                <input type="submit" class="btn btn-primary" value="Finalizar consulta">
+                                <textarea name="anotacoes" class="form-control form-control-sm mb-3 {% if consulta.status == 'F' %}not-active{% endif %}" rows="3" placeholder="Deixe suas anotações médicas ..."> {{consulta.anotacoes}}</textarea>
+                                <input type="submit" class="btn btn-primary {% if consulta.status == 'F' %}not-active{% endif %}" value="Finalizar consulta">
                             </form>
                         </div>
                     {% endif %}
@@ -59,7 +59,7 @@
                     {% csrf_token %}
                     <div class="mb-3">
                         <label>Adicione o link do google meet para iniciar a consulta</label>
-                        <input type="text" name="link" class="form-control shadow-main-color" id="" placeholder="Link ..." value="{% if consulta.link %}{{consulta.link}}{% endif %}">
+                        <input type="text" name="link" class="form-control form-control-sm" id="" placeholder="Link ..." value="{% if consulta.link %}{{consulta.link}}{% endif %}">
                     </div>
                     <input type="submit" class="btn-cadastro bsm-6 {% if consulta.status != 'A' %}not-active{% endif %}" value="Iniciar consulta">
                 </form>
@@ -70,9 +70,9 @@
                     <h3 class="fw-600 mb-4">Documentos para o paciente</h3>
                     <form action="{% url 'add_documento' consulta.id %}" method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
-                        <input type="text" name="titulo" class="form-control mb-3" placeholder="Titulo ..." value="{{titulo}}">
-                        <input type="file" name="documento" class="form-control mb-4">
-                        <input type="submit" class="btn-cadastro bsm-6 mb-4" value="Adicionar documento">
+                        <input type="text" name="titulo" class="form-control form-control-sm mb-3" placeholder="Titulo ..." value="{{titulo}}">
+                        <input type="file" name="documento" class="form-control form-control-sm mb-3">
+                        <input type="submit" class="btn-cadastro bsm-6" value="Adicionar documento">
                     </form>
                     <hr>
                     {% if documentos %}

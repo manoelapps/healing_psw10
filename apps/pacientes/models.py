@@ -22,7 +22,7 @@ class Consulta(models.Model):
         return Pessoa.objects.get(user=self.data_aberta.user).valor_consulta
 
     def __str__(self):
-        return self.paciente.username
+        return self.paciente.nome
 
 
 class Documento(models.Model):
@@ -32,3 +32,19 @@ class Documento(models.Model):
 
     def __str__(self):
         return self.titulo
+
+
+class Avaliacao(models.Model):
+    consulta = models.OneToOneField(Consulta, on_delete=models.DO_NOTHING)
+    tempo_espera = models.PositiveSmallIntegerField()
+    satisfacao = models.PositiveSmallIntegerField()
+
+    @property
+    def data(self):
+        return self.consulta.data_aberta.data
+
+    class Meta:
+        verbose_name_plural = 'Avaliações'
+
+    def __str__(self):
+        return f'{self.consulta.paciente.nome}'

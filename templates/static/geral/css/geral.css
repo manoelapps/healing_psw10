@@ -48,6 +48,10 @@
     padding: 12px auto;
 }
 
+.w-10 {
+    width: 10%;
+}
+
 .w-20 {
     width: 20%;
 }
@@ -78,6 +82,10 @@
 
 .data {
     width: 124px;
+}
+
+.data-mes {
+    width: 164px;
 }
 
 .bg-color-dark {

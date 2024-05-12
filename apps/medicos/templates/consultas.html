@@ -16,10 +16,18 @@
     <div class="container inter pt-5">
 
         {% include "partials/messages.html" %}
-        <h2><span class="color-dark">Suas consultas</span></h2>
-
+        <div class="d-flex align-items-center">
+            <img src="{{medico.foto.url}}" class="foto-perfil foto-perfil-lg" alt="Foto do médico">
+            <div class="ms-4">
+                <p class="fw-700 fs-25 mb-0">Olá,</p>
+                <p class="fw-700 fs-25 mb-1"><span class="color-dark">Dr(a). {{medico.nome}}</span></p>
+                <p class="fs-5 mb-0"><em>Estas são suas consultas</em></p>
+            </div>
+        </div>
+        <hr>
+        <p class="fw-600 fs-25 mb-0">Filtro</p>
         <form action="{% url 'consultas_medico' %}" method="GET">
-            <div class="d-flex gap-4">
+            <div class="d-flex gap-3">
                 <div class="mb-3">
                     <input type="text" name="paciente" value="{{paciente_filter}}" class="form-control shadow-main-color" placeholder="Paciente ...">
                 </div>
@@ -43,13 +51,10 @@
                 </div>
             </div>
         </form>
-
-        <br>
-        
-        <h2><span class="color-dark">Hoje</span></h2>
+        <h2 class="color-dark mb-0">Hoje</h2>
         {% if consultas_hoje %}
             <div class="list-minhas-consultas">
-                <table class="table">
+                <table class="table table-sm mb-0">
                     <thead>
                         <tr>
                             <th scope="col">#</th>
@@ -74,12 +79,10 @@
             <p class="fw-500 fs-30 text-center text-info">Não há consultas para hoje !</p>
         {% endif %}
         <hr>
-        
-
-        <h2><span class="color-dark">Restantes</span></h2>
+        <h2 class="color-dark mb-0">Restantes</h2>
         {% if consultas_restantes %}
         <div class="list-minhas-consultas">
-            <table class="">
+            <table class="table table-sm mb-0">
                 <thead>
                     <tr>
                         <th scope="col">#</th>

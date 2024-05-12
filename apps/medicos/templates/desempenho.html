@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block 'title' %}Desempenho médico{% endblock 'title' %}
+
+{% block 'head' %}
+    <link rel="stylesheet" href="{% static 'geral/css/geral.css' %}">
+    <link rel="stylesheet" href="{% static 'geral/css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'usuarios/css/usuarios.css' %}">
+    <link rel="stylesheet" href="{% static 'plataforma/css/plataforma.css' %}">
+    <link rel="stylesheet" href="{% static 'medicos/css/medicos.css' %}">
+{% endblock 'head' %}
+
+{% block 'body' %}
+
+    <div class="container inter pt-5">
+        <div class="d-flex align-items-center mb-3">
+            <img src="{{medico.foto.url}}" class="foto-perfil foto-perfil-lg" alt="Foto do médico">
+            <div class="ms-4">
+                <p class="fw-700 fs-25 mb-1"><span class="color-dark">Dr(a). {{medico.nome}}</span></p>
+                <p class="fw-500 fs-6 mb-1">Sua Avaliação: <span class="color-dark"> {{medico.estrelas}} ({{medico.media_avaliacoes}})</span></p>
+                <p class="fs-4 mb-0"><em>Veja seu desempenho</em></p>
+            </div>
+        </div>
+        <hr>
+
+        {% include 'partials/messages.html' %}
+
+        <label class="fw-500">Filtro:</label>
+        <div class="d-flex align-items-center gap-3 mb-3">
+            <input type="month" class="data-mes form-control form-control-sm" name="dt-inicial" value="{{dt_inicial}}">
+            <a href="{% url 'desempenho_medico' %}" class="btn-secundario btn-filtro bsm-6"><i class="bi bi-arrow-counterclockwise" data-bs-tt="tooltip" title="Remover filtro"></i></a>
+        </div>
+
+        {% if avaliacoes %}
+            <p class="fw-600 fs-5 text-center mt-4"><em>Quantidade consultas no período: </em><span class="color-main ms-2">{{ consultas_gerais }}</span></p>
+            <div class="d-flex gap-5">
+                <div class="w-50">
+                    <canvas id="myChart"></canvas>
+                </div>
+                <div class="w-50">
+                    <canvas id="myChart2"></canvas>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    {% block 'script' %}
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="{% static 'medicos/js/desempenho.js' %}"></script>
+        <script>
+            const ctx = document.getElementById('myChart');
+            const ctx2 = document.getElementById('myChart2');
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: {{labels|safe}},
+                    datasets: [{
+                        label: 'Satisfação',
+                        data: {{values_satisfacao}},
+                        backgroundColor: 'rgb(144, 73, 231, 0.2)',
+                        borderColor: 'rgb(144, 73, 231)',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Tempo de espera',
+                        data: {{values_espera}},
+                        //data: [3,2,1,2,4,2,3,5,2,3,2,4],
+                        backgroundColor: 'rgb(105, 190, 171, 0.2)',
+                        borderColor: 'rgb(13, 110, 64)',
+                        borderWidth: 1
+                    }]
+                },    
+            });
+
+            new Chart(ctx2, {
+                type: 'line',
+                data: {
+                    labels: {{labels|safe}},
+                    datasets: [{
+                        label: 'Quantidades',
+                        data: {{lista_qtd_consultas}},
+                        //data: [10,15,12,16,12,18,8,11,14,10,12,18],
+                        backgroundColor: 'rgb(228, 96, 49, 0.2)',
+                        borderColor: 'rgb(228, 96, 49)',
+                        borderWidth: 1
+                    }]
+                },    
+            });
+            
+        </script>
+    {% endblock 'script' %}
+
+{% endblock 'body' %}

@@ -1,6 +1,8 @@
 from datetime import datetime
 from django.db import models
+from django.db.models import Sum
 from django.contrib.auth.models import User
+from django.utils.safestring import mark_safe
 from medicos.models import DatasAbertas, Especialidade
 
 
@@ -47,6 +49,35 @@ class Pessoa(models.Model):
     def proxima_data(self):
         proxima_data = DatasAbertas.objects.filter(user=self.user).filter(data__gt=datetime.now()).filter(agendada=False).order_by('data').first()     
         return proxima_data
+    
+    @property
+    def media_avaliacoes(self):
+        from pacientes.models import Avaliacao
+        from medicos.utils import calcula_media
+
+        media_espera, media_satisfacao = 0, 0
+        avaliacoes = Avaliacao.objects.filter(consulta__data_aberta__user=self.user)
+        if avaliacoes:
+            avaliacoes_espera = avaliacoes.aggregate(Sum('tempo_espera'))
+            avaliacoes_satisfacao = avaliacoes.aggregate(Sum('satisfacao'))
+
+            media_espera = calcula_media(avaliacoes_espera['tempo_espera__sum'], avaliacoes.count())
+            media_satisfacao = calcula_media(avaliacoes_satisfacao['satisfacao__sum'], avaliacoes.count())
+
+        return calcula_media(media_espera + media_satisfacao, 2)
+    
+    @property
+    def estrelas(self):
+        if self.media_avaliacoes > 0:
+            conteudo = ''
+            for i in range(int(self.media_avaliacoes)):
+                conteudo += '<i class="bi bi-star-fill"></i>'
+            if self.media_avaliacoes - int(self.media_avaliacoes) > 0:
+                conteudo += '<i class="bi bi-star-half"></i>'
+            
+            return mark_safe(conteudo)
+        else:
+            return ''
     
     def __str__(self):
         return self.user.username
