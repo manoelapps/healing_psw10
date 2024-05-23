@@ -14,6 +14,9 @@ def is_medico(user):
     pessoa = Pessoa.objects.filter(user=user)
     return pessoa[0].is_medico if pessoa else False
 
+def is_membro(user):
+    return User.objects.get(username=user).is_staff
+
 
 class Pessoa(models.Model):
     choices_status = (
@@ -81,4 +84,18 @@ class Pessoa(models.Model):
     
     def __str__(self):
         return self.user.username
-    
+
+
+class Analise(models.Model):
+    choices_decisao = (
+        ('A', 'Aprovado'),
+        ('R', 'Reprovado'),
+    )
+    data = models.DateTimeField(auto_now_add=True, auto_now=False)
+    pessoa = models.ForeignKey(Pessoa, on_delete=models.DO_NOTHING)
+    decisao = models.CharField(max_length=1, choices=choices_decisao)
+    mensagem = models.TextField(blank=True, null=True)
+    analisador = models.ForeignKey(User, on_delete=models.DO_NOTHING, verbose_name='analisado por')
+
+    def __str__(self):
+        return f'{self.pessoa.nome} - {self.get_decisao_display()}'

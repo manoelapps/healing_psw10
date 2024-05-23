@@ -15,13 +15,18 @@
                                 Paciente
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarPacientes">
-                                <li><a class="dropdown-item" href="{% url 'home' %}">Agendamento</a></li>
-                                <!--
                                 <li>
-                                    <a class="dropdown-item" href="{ url 'cadastro_atualizar' %}">Atualizar</a>
+                                    <a class="dropdown-item" href="{% url 'home' %}">Agendamento</a>
                                 </li>
-                                -->
-                                <li><a class="dropdown-item" href="{% url 'minhas_consultas' %}">Minhas consultas</a></li>
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'minhas_consultas' %}">Minhas consultas</a>
+                                </li>
+                                {% if not is_medico %}
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <a class="dropdown-item" href="{% url 'ser_medico' %}">Quero ser médico</a>
+                                    </li>
+                                {% endif %}
                             </ul>
                         </li>
                     {% endif %}
@@ -46,6 +51,27 @@
                             </ul>
                         </li>
                     {% endif %}
+                    {% if is_membro %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarPacientes" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Área Administrativa
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarPacientes">
+                            <li>
+                                <a class="dropdown-item" href="{% url 'cadastro_solicitacoes' %}">Solicitações pendentes</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'cadastro_reanalises' %}">Reanálises cadastro</a>
+                            </li>
+                            <!--
+                            <li>
+                                <a class="dropdown-item" href="{ url 'minhas_consultas' %}">Minhas consultas</a>
+                            </li>
+                            -->
+                        </ul>
+                    </li>
+                    {% endif %}
+                        
                 </ul>
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">

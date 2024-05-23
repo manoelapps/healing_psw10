@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block 'title' %}Quero ser médico{% endblock 'title' %}
+
+{% block 'head' %}
+    <link rel="stylesheet" href="{% static 'geral/css/geral.css' %}">
+    <link rel="stylesheet" href="{% static 'geral/css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'usuarios/css/usuarios.css' %}">
+    <link rel="stylesheet" href="{% static 'plataforma/css/plataforma.css' %}">
+    <link rel="stylesheet" href="{% static 'medicos/css/medicos.css' %}">
+{% endblock 'head' %}
+
+{% block 'body' %}
+    <div class="container inter pt-4">
+        {% include 'partials/paciente_topo.html' %}
+        <hr>
+        <div class="w-60" id="area-medica">
+            <p class="fw-600 fs-25 color-main text-center mb-3">Informe os dados</p>
+            <form action="{% url 'ser_medico' %}" method="POST" enctype='multipart/form-data'>
+                {% csrf_token %}
+                <div class="row">
+                    <div class="w-75 mb-3">
+                        <label for="">CRM:</label>
+                        <input type="text" class="form-control form-control-sm" name="crm" placeholder="CRM..." value="{{crm}}" required autofocus>
+                    </div>
+                    <div class="w-25 mb-3">
+                        <label for="">Data do CRM:</label>
+                        <input type="date" name="data_crm" class="form-control form-control-sm" maxlength="8" value="{{data_crm}}" required>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="">Cédula de identidade médica (cim):</label>
+                    <input type="file" name="cim" class="form-control form-control-sm">
+                </div>
+                <div class="row">
+                    <div class="col-md-8 mb-3">
+                        <label for="">Especialidade médica:</label>
+                        <select name="especialidade" class="form-select form-select-sm">
+                            <option value="">- - -</option>
+                            {% for especialidade in especialidades %}
+                                <option value="{{especialidade.id}}" required 
+                                    {% if especialidade.id == especialidade_medica %} selected {% endif %}>
+                                    {{especialidade.nome}} 
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="">Valor consulta:</label>
+                        <input type="number" step="0.5" name="valor_consulta" class="form-control form-control-sm" value="{{valor_consulta}}" required>
+                    </div>
+                </div>
+                <input type="submit" class="btn-cadastro bsm-6 px-4 mt-2">
+            </form>
+        </div>
+    </div>
+{% endblock 'body' %}

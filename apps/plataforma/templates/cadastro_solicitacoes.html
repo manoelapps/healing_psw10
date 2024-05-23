@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block 'title' %}Solicitações cadastro{% endblock 'title' %}
+
+{% block 'head' %}
+    <link rel="stylesheet" href="{% static 'geral/css/geral.css' %}">
+    <link rel="stylesheet" href="{% static 'geral/css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'usuarios/css/usuarios.css' %}">
+    <link rel="stylesheet" href="{% static 'plataforma/css/plataforma.css' %}">
+    <link rel="stylesheet" href="{% static 'medicos/css/medicos.css' %}">
+{% endblock 'head' %}
+
+{% block 'body' %}
+    <div class="container inter">
+        <div class="w-75 mt-5">
+            <h2 class="color-main mb-3">Solicitações pendentes</h2>
+            {% include "partials/messages.html" %}
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Pessoa</th>
+                        <th scope="col">Médico ?</th>
+                        <th scope="col">Ação</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for solicitacao in solicitacoes %}
+                        <tr>
+                            <td scope="row">{{ forloop.counter }}</td>
+                            <td>{{ solicitacao.nome }}</td>
+                            <td>
+                                {% if solicitacao.is_medico %}
+                                    Sim
+                                {% else %}
+                                    Não
+                                {% endif %}
+                            </td>
+                            <td><a href="{% url 'analise_cadastro' solicitacao.user.id %}" class="fw-600">Analisar</a></td>
+                        </tr>
+                    
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock 'body' %}

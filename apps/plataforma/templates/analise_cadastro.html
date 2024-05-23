@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block 'title' %}Análise cadastro{% endblock 'title' %}
+
+{% block 'head' %}
+    <link rel="stylesheet" href="{% static 'geral/css/geral.css' %}">
+    <link rel="stylesheet" href="{% static 'geral/css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'usuarios/css/usuarios.css' %}">
+    <link rel="stylesheet" href="{% static 'plataforma/css/plataforma.css' %}">
+    <link rel="stylesheet" href="{% static 'medicos/css/medicos.css' %}">
+{% endblock 'head' %}
+
+{% block 'body' %}
+    <div class="container inter">
+        <div class="w-75 mt-5">
+            {% include 'partials/messages.html' %}
+        </div>
+        <div class="w-75 d-flex gap-5 mt-5">
+            <div class="w-50 mb-3">
+                <h3 class="color-main mb-3">Dados cadastrados</h3>
+                
+                <div class="row mt-4 mx-0 mb-3 border-bottom">
+                    <div class="data fw-600 px-0">Nome:</div>
+                    <div class="col-md fw-600 color-main px-0">{{pessoa.nome}}</div>
+                </div>
+                <div class="row mb-3 mx-0 border-bottom">
+                    <div class="data fw-600 px-0">CNH/RG:</div>
+                    <div class="col-md px-0"><a href="{{pessoa.cnh_rg.url}}" class="text-decoration-none" target="_blank">Ver CNH</a></div>
+                </div>
+                <div class="row mb-3 mx-0 border-bottom">
+                    <div class="data fw-600 px-0">Foto:</div>
+                    <div class="col-md px-0"><a href="{{pessoa.foto.url}}" class="text-decoration-none" target="_blank">Ver Foto</a></div>
+                </div>
+                {% if pessoa.is_medico %}
+                    <div class="row mb-3 mx-0 border-bottom">
+                        <div class="data fw-600 px-0">CRM:</div>
+                        <div class="col-md px-0">{{pessoa.crm}}</div>
+                    </div>
+                    <div class="row mb-3 mx-0 border-bottom">
+                        <div class="data fw-600 px-0">CIM:</div>
+                        <div class="col-md px-0"><a href="{{pessoa.cedula_identidade_medica.url}}" class="text-decoration-none" target="_blank">Ver CIM</a></div>
+                    </div>
+                    <div class="row mb-3 mx-0 border-bottom">
+                        <div class="data fw-600 px-0">Especialidade:</div>
+                        <div class="col-md px-0">{{pessoa.especialidade}}</div>
+                    </div>
+                {% endif %}
+            </div>    
+            <div class="w-50 mb-3">
+                <h3 class="color-main mb-3">Sua análise</h3>
+
+                <form action="#" method="POST">
+                    {% csrf_token %}
+                    <label class="fw-600 fs-6">Status</label>
+                    <div class="mb-3 border rounded px-3 py-2">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="status" id="inlineRadio1" value="A">
+                            <label class="form-check-label" for="inlineRadio1">Aprovado</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="status" id="inlineRadio2" value="R">
+                            <label class="form-check-label" for="inlineRadio2">Reprovado</label>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="mensagem" class="form-label fw-600 fs-6">Mensagem</label>
+                        <textarea name="mensagem" id="mensagem" class="form-control"
+                        rows="4" placeholder="Caso reprovado, deixe uma mensagem para o usuário"></textarea>
+                    </div>
+                    <input type="submit" class="btn-cadastro bsm-6 mt-2" value="Analisar">
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock 'body' %}

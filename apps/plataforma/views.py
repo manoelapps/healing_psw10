@@ -4,10 +4,11 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
+from django.db import transaction
 from django.urls import reverse
 from medicos.models import Especialidade
 from pacientes.models import Consulta
-from .models import Pessoa, is_aprovado, is_medico
+from .models import Pessoa, Analise, is_aprovado, is_medico, is_membro
 
 
 @login_required
@@ -125,11 +126,11 @@ def cadastro_pessoa(request):
 
 
 @login_required
-def cadastro_analise(request):
+def cadastro_situacao(request):
     if is_aprovado(request.user):
         return redirect(reverse('home'))
     
-    template_name = 'cadastro_analise.html'
+    template_name = 'cadastro_situacao.html'
     pessoa_logada = Pessoa.objects.get(user=request.user)
     qtd_dias_desde_cadastro = (datetime.now().date() - pessoa_logada.criado_em.date()).days
 
@@ -159,7 +160,7 @@ def cadastro_analise(request):
             request.user.email,
             [settings.EMAIL_HOST_USER,]
         ):
-            messages.add_message(request, messages.SUCCESS, f"E-mail enviado com sucesso, aguarde resposta.")
+            messages.add_message(request, messages.SUCCESS, 'E-mail enviado com sucesso, aguarde resposta.')
         else:
             messages.add_message(request, messages.ERROR, 'Não foi possível enviar o e-mail!')
 
@@ -170,8 +171,11 @@ def cadastro_analise(request):
 
 @login_required
 def home(request):
+    if is_membro(request.user):
+        return redirect(reverse('cadastro_solicitacoes'))
+    
     if not is_aprovado(request.user):
-        return redirect(reverse('cadastro_analise'))
+        return redirect(reverse('cadastro_situacao'))
     
     template_name = 'home.html'
     paciente = Pessoa.objects.get(user=request.user)
@@ -201,5 +205,96 @@ def home(request):
         'is_aprovado': is_aprovado(request.user),
         'qtd_dias_desde_cadastro': qtd_dias_desde_cadastro
     }
+
+    return render(request, template_name, context)
+
+
+@login_required
+def cadastro_solicitacoes(request):
+    if not is_membro(request.user):
+        return redirect(reverse('home'))
+    
+    template_name = 'cadastro_solicitacoes.html'
+
+    solicitacoes = Pessoa.objects.filter(status='S')
+
+    context = {
+        'is_membro': is_membro(request.user),
+        'solicitacoes': solicitacoes,
+    }
+
+    return render(request, template_name, context)
+
+
+@login_required
+def cadastro_reanalises(request):
+    if not is_membro(request.user):
+        return redirect(reverse('home'))
+    
+    template_name = 'cadastro_reanalises.html'
+
+    solicitacoes = Pessoa.objects.filter(status='R')
+
+    pessoa_filtro = request.GET.get('pessoa')
+
+    if pessoa_filtro:
+        solicitacoes = solicitacoes.filter(nome__icontains=pessoa_filtro)
+
+    context = {
+        'is_membro': is_membro(request.user),
+        'solicitacoes': solicitacoes,
+    }
+
+    return render(request, template_name, context)
+
+
+@login_required
+def analise_cadastro(request, id_pessoa):
+    if not is_membro(request.user):
+        return redirect(reverse('home'))
+    
+    pessoa = Pessoa.objects.get(user__id=id_pessoa)
+    
+    template_name = 'analise_cadastro.html'
+
+    context = {
+        'is_membro': is_membro(request.user),
+        'pessoa': pessoa,
+    }
+    
+    if request.method == 'POST':
+        status = request.POST.get('status')
+        mensagem = request.POST.get('mensagem')
+
+        if status:
+            if status == 'A':
+                mensagem = 'Link de acesso: http://127.0.0.1:8000/auth/login/'
+            else:
+                if len(mensagem.strip()) == 0:
+                    messages.add_message(request, messages.WARNING, 'Mensagem não informada !')
+                    return redirect(f'/plataforma/analise-cadastro/{id_pessoa}')
+                mensagem = 'Motivo: ' + mensagem
+
+            try:
+                with transaction.atomic():
+                    pessoa.status = status.upper()
+                    pessoa.save()
+                    analise = Analise(
+                                pessoa = pessoa,
+                                decisao = status.upper(),
+                                mensagem = mensagem,
+                                analisador = request.user
+                            )
+                    analise.save()
+
+                messages.add_message(request, messages.SUCCESS, f"Cadastro analisado com sucesso")
+                return redirect(reverse('cadastro_solicitacoes'))
+            
+            except Exception as e:
+                messages.add_message(request, messages.ERROR, f'Erro: {e}')
+                return redirect(f'/plataforma/analise-cadastro/{id_pessoa}')
+        else:
+            messages.add_message(request, messages.WARNING, 'Status não selecionado !')
+            return redirect(f'/plataforma/analise-cadastro/{id_pessoa}')
 
     return render(request, template_name, context)

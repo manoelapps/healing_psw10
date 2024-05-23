@@ -94,7 +94,10 @@ def logar(request):
 
         if user:
             login(request, user)
-            return redirect(reverse('cadastro_pessoa'))
+            if user.is_staff:
+                return redirect(reverse('cadastro_solicitacoes'))
+            else:
+                return redirect(reverse('cadastro_pessoa'))
         else:
             messages.add_message(
                 request, messages.ERROR, 'Usuário ou senha inválidos'

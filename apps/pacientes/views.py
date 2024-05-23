@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.urls import reverse
 from plataforma.models import Pessoa, is_aprovado, is_medico
-from medicos.models import DatasAbertas
+from medicos.models import DatasAbertas, Especialidade
 from .models import Avaliacao, Consulta, Documento
 
 
@@ -226,3 +226,63 @@ def avaliar_consulta(request, id_consulta):
             messages.add_message(request, messages.ERROR, f'Erro: {e} !')
 
         return redirect(f'/pacientes/consulta/{id_consulta}/')
+
+
+@login_required
+def ser_medico(request):
+    if not is_aprovado(request.user):
+        return redirect(reverse('cadastro_analise'))
+    
+    template_name = 'ser_medico.html'
+    paciente = Pessoa.objects.get(user=request.user)
+    especialidades = Especialidade.objects.all()
+
+    context = {
+        'paciente': paciente, 
+        'legenda': 'Quero ser médico',
+        'is_medico': is_medico(request.user),
+        'is_aprovado': is_aprovado(request.user),
+        'especialidades': especialidades,
+    }
+
+    if request.method == 'POST':
+        crm = request.POST.get('crm')
+        data_crm = request.POST.get('data_crm')
+        cim = request.FILES.get('cim')
+        especialidade = request.POST.get('especialidade')
+        valor_consulta = request.POST.get('valor_consulta')
+
+        context_medico = {
+            'crm': crm.strip(),
+            'data_crm': data_crm,
+            'especialidade_medica': int(especialidade.strip()),
+            'valor_consulta': valor_consulta.strip(),
+            'cim': cim,
+        }
+
+        preenchido = True
+        for k, v in context_medico.items():
+            if k == 'especialidade_medica':
+                if v is None:
+                    preenchido = False
+            elif len(v) == 0:
+                preenchido = False
+
+            if not preenchido:
+                messages.add_message(request, messages.WARNING, f'O campo "{k}" não foi informado !')
+                return render(request, template_name, context)
+
+        try:
+            paciente.crm = crm.strip(),
+            paciente.data_crm = data_crm,
+            paciente.especialidade_id = especialidade,
+            paciente.valor_consulta = valor_consulta,
+            paciente.save()
+            messages.add_message(request, messages.SUCCESS, 'Solicitação realizada com sucesso, aguarde a análise !')
+            return redirect(reverse('home'))
+        
+        except Exception as e:
+            messages.add_message(request, messages.ERROR, f'Erro: {e}')
+            return render(request, template_name, context)
+    
+    return render(request, template_name, context)
