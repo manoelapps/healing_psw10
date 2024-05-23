@@ -4,11 +4,11 @@
 
 ## Objetivo:
 
-    Projeto para gerenciar pacientes e médicos de uma clínica, como também realizar consultas online.
+    Projeto para realização de consultas online.
 
 ## Pré-requisitos:
 
-    python, pillow e python-decouple
+    Django, pillow, python-decouple e htmx.
 
 ## Como usar:
 
