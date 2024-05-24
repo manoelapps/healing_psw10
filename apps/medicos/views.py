@@ -123,9 +123,9 @@ def consultas_medico(request):
 
     if paciente_filter:
         context['paciente_filter'] = paciente_filter
-        consultas_hoje = consultas_hoje.filter(paciente__username__icontains=paciente_filter)
+        consultas_hoje = consultas_hoje.filter(paciente__nome__icontains=paciente_filter)
         context['consultas_hoje'] = consultas_hoje
-        consultas_restantes = consultas_restantes.filter(paciente__username__icontains=paciente_filter)
+        consultas_restantes = consultas_restantes.filter(paciente__nome__icontains=paciente_filter)
         context['consultas_restantes'] = consultas_restantes
 
     if status_filter:
