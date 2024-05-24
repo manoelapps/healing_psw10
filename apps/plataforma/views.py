@@ -89,6 +89,11 @@ def cadastro_pessoa(request):
             if not preenchido:
                 messages.add_message(request, messages.WARNING, f'O campo "{k}" não foi informado !')
                 return render(request, template_name, context)
+            
+        if len(crm.strip()) > 0:
+            if Pessoa.objects.filter(crm=crm.strip()):
+                messages.add_message(request, messages.WARNING, 'CRM já cadastrado para outra pessoa !')
+                return render(request, template_name, context)
                 
         pessoa = Pessoa(
             user=request.user,

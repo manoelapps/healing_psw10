@@ -38,7 +38,7 @@ class Pessoa(models.Model):
     descricao = models.TextField(null=True, blank=True)
     # Dados médicos
     is_medico = models.BooleanField(default=False)
-    crm = models.CharField(max_length=30, unique=True, blank=True, null=True)
+    crm = models.CharField(max_length=30, blank=True, null=True)
     data_crm = models.DateField(blank=True, null=True)
     cedula_identidade_medica = models.FileField(upload_to='medico/cim', blank=True, null=True)
     especialidade = models.ForeignKey(Especialidade, on_delete=models.DO_NOTHING, null=True, blank=True)
