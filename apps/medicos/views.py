@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.urls import reverse
-from locale import setlocale, LC_ALL
+import locale
 
 from apps.medicos.utils import calcula_media, calcula_total
 from pacientes.models import Avaliacao, Consulta, Documento
@@ -363,8 +363,9 @@ def desempenho_medico(request):
             ano = int(ano_mes[:4])
             mes = int(ano_mes[5:])
 
+            loc = locale.getlocale()
+            locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
             for x in range(0, qtd_meses + 1):
-                setlocale(LC_ALL, 'pt_BR.UTF-8')
                 str_mes_ano = datetime(year=ano, month=mes, day=1).strftime('%b/%Y')
 
                 consultas_do_mes = consultas_gerais.filter(data_aberta__data__contains=ano_mes)
@@ -393,6 +394,7 @@ def desempenho_medico(request):
                     ano += 1 
                 ano_mes = str(ano) + '-' + str(mes).zfill(2)
 
+            locale.setlocale(locale.LC_ALL, loc)
         else:
             for x in range(0, intervalo_dias + 1):
                 dt = (dt_inicial + timedelta(days=x))#.date()
