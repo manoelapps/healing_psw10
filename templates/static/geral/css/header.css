@@ -1,7 +1,18 @@
-body {
-    padding: 58px;
+/* Definição de Variáveis */
+:root {
+    --main-color: #00CCBE; /* Cor principal do menu */
+    --hover-color: #686565; /* Cor ao passar o mouse */
+    --text-color: #fff; /* Cor do texto */
 }
 
+/* Estilo do Corpo */
+body {
+    padding: 58px 0; /* Mantém espaço superior fixo para o menu */
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+/* Menu de Navegação */
 .nav-menu {
     background-color: var(--main-color);
     padding: 0;
@@ -9,26 +20,63 @@ body {
     top: 0;
     left: 0;
     width: 100%;
+    z-index: 1000; /* Certifique-se de que esteja acima do conteúdo */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Adiciona uma sombra leve */
 }
 
+/* Estilo do Navbar */
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 1rem;
+}
+
+/* Imagem no Navbar */
 .navbar > .container > img {
-    width: 58px;
-    margin-right: .5rem;
+    width: 40px; /* Ajuste proporcional para dispositivos móveis */
+    height: auto;
+    margin-right: 0.5rem;
 }
 
+/* Título no Navbar */
 .navbar-brand {
-    font-size: 25px;
+    font-size: 1.5rem;
     text-transform: uppercase;
+    color: var(--text-color);
+    font-weight: bold;
+    margin: 0;
 }
 
+/* Dropdown Menu */
 .dropdown-menu {
     background-color: var(--main-color);
+    border: none; /* Remove bordas */
+    border-radius: 0.25rem;
+    padding: 0.5rem 0;
 }
 
+/* Itens no Dropdown */
 .dropdown-menu .dropdown-item {
-    color: #fff;
+    color: var(--text-color);
+    padding: 0.5rem 1rem;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .dropdown-menu .dropdown-item:hover {
-    color: #686565;
+    color: var(--hover-color);
+    background-color: rgba(255, 255, 255, 0.1); /* Destaque leve */
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .navbar-brand {
+        font-size: 1.2rem; /* Reduz o tamanho do texto */
+    }
+    .navbar > .container > img {
+        width: 30px; /* Reduz o tamanho da imagem */
+    }
+    body {
+        padding: 70px 0; /* Ajuste para menus maiores */
+    }
 }

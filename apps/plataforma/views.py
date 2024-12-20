@@ -255,6 +255,7 @@ def cadastro_reanalises(request):
 
 @login_required
 def analise_cadastro(request, id_pessoa):
+
     if not is_membro(request.user):
         return redirect(reverse('home'))
     
@@ -303,3 +304,34 @@ def analise_cadastro(request, id_pessoa):
             return redirect(f'/plataforma/analise-cadastro/{id_pessoa}')
 
     return render(request, template_name, context)
+
+@login_required
+def cadastro_analise(request):
+    try:
+        pessoa = Pessoa.objects.get(user=request.user)
+    except Pessoa.DoesNotExist:
+        messages.add_message(request, messages.ERROR, "Cadastro não encontrado.")
+        return redirect(reverse('home'))
+
+    if pessoa.status == 'A':
+        messages.add_message(request, messages.SUCCESS, "Seu cadastro já foi aprovado!")
+        return redirect(reverse('home'))
+
+    if request.method == "POST":
+        try:
+            pessoa.status = 'S'
+            pessoa.save()
+            messages.add_message(request, messages.SUCCESS, "Seu cadastro foi enviado para análise.")
+        except Exception as e:
+            messages.add_message(request, messages.ERROR, f"Erro ao atualizar o status: {e}")
+        return redirect(reverse('cadastro_analise'))
+
+    # Renderiza o template com informações do cadastro
+    template_name = 'cadastro_situacao.html'
+    context = {
+        'pessoa': pessoa,
+        'status': pessoa.status,
+    }
+
+    return render(request, template_name, context)
+

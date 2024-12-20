@@ -273,10 +273,10 @@ def ser_medico(request):
                 return render(request, template_name, context)
 
         try:
-            paciente.crm = crm.strip(),
-            paciente.data_crm = data_crm,
-            paciente.especialidade_id = especialidade,
-            paciente.valor_consulta = valor_consulta,
+            paciente.crm = crm.strip()
+            paciente.data_crm = data_crm
+            paciente.especialidade_id = especialidade
+            paciente.valor_consulta = valor_consulta
             paciente.save()
             messages.add_message(request, messages.SUCCESS, 'Solicitação realizada com sucesso, aguarde a análise !')
             return redirect(reverse('home'))
